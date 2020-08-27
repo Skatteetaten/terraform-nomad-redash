@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD041 -->
+<!-- markdownlint-disable MD028 -->
 <p align="center">
  <img width="100px" src="https://www.svgrepo.com/show/58111/cube.svg" align="center" alt="Vagrant-hashistack" />
  <h2 align="center">Vagrant-hashistack Template</h2>
