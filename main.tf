@@ -25,6 +25,7 @@ data "template_file" "nomad_job_email" {
 
 resource "nomad_job" "nomad_job_redash_server" {
   jobspec = "${data.template_file.nomad_job_redash_server.rendered}"
+  detach = false
   depends_on = [
     "nomad_job.nomad_job_redis",
     "nomad_job.nomad_job_postgres",
@@ -34,6 +35,7 @@ resource "nomad_job" "nomad_job_redash_server" {
 
 resource "nomad_job" "nomad_job_redash_worker" {
   jobspec = "${data.template_file.nomad_job_redash_worker.rendered}"
+  detach = false
   depends_on = [
     "nomad_job.nomad_job_redash_server",
   ]
@@ -41,6 +43,7 @@ resource "nomad_job" "nomad_job_redash_worker" {
 
 resource "nomad_job" "nomad_job_redash_scheduler" {
   jobspec = "${data.template_file.nomad_job_redash_scheduler.rendered}"
+  detach = false
   depends_on = [
     "nomad_job.nomad_job_redash_server",
   ]
@@ -48,12 +51,15 @@ resource "nomad_job" "nomad_job_redash_scheduler" {
 
 resource "nomad_job" "nomad_job_postgres" {
   jobspec = "${data.template_file.nomad_job_postgres.rendered}"
+  detach = false
 }
 
 resource "nomad_job" "nomad_job_redis" {
   jobspec = "${data.template_file.nomad_job_redis.rendered}"
+  detach = false
 }
 
 resource "nomad_job" "nomad_job_email" {
   jobspec = "${data.template_file.nomad_job_email.rendered}"
+  detach = false
 }

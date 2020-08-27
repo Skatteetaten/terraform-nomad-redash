@@ -13,14 +13,6 @@ job "redash-server" {
       name = "redash-redash-server-service"
       port = 5000
       tags = ["redash", "redash-server"]
-      check {
-        expose   = true
-        name     = "api-alive"
-        type     = "http"
-        path     = "/ping"
-        interval = "10s"
-        timeout  = "2s"
-      }
       connect {
         sidecar_service {
           proxy {
