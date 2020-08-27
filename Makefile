@@ -15,7 +15,7 @@ ifdef CUSTOM_CA
 	cp -f ${CUSTOM_CA} docker/conf/certificates/
 endif
 
-up: update-box custom_ca
+up: clean update-box custom_ca
 ifdef CI # CI is set in Github Actions
 	SSL_CERT_FILE=${SSL_CERT_FILE} CURL_CA_BUNDLE=${CURL_CA_BUNDLE} vagrant up --provision
 else
@@ -44,4 +44,10 @@ clean: destroy-box remove-tmp
 # helper commands
 update-box:
 	@SSL_CERT_FILE=${SSL_CERT_FILE} CURL_CA_BUNDLE=${CURL_CA_BUNDLE} vagrant box update || (echo '\n\nIf you get an SSL error you might be behind a transparent proxy. \nMore info https://github.com/fredrikhgrelland/vagrant-hashistack/blob/master/README.md#if-you-are-behind-a-transparent-proxy\n\n' && exit 2)
+
+
+
+
+
+
 
