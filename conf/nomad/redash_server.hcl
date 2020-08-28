@@ -36,6 +36,10 @@ job "redash-server" {
               destination_name = "redash-email-service"
               local_bind_port = 80
             }
+            upstreams {
+              destination_name = "presto"
+              local_bind_port = 8080
+            }
           }
         }
       }

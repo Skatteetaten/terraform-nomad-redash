@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.2 UNRELEASED]
+
+### Changed
+- Increased resources allocated to vagrant-box
+
+### Added
+- README section `Starting datastack`
+- Added example `datastack`
+- Added connection to presto
+
+### Fixed
+
 ## [0.0.1]
 
 ### Changed
