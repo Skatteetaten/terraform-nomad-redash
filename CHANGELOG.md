@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.1 UNRELEASED]
+## [0.0.1]
 
 ### Changed
 - Changed README to TF-module readme
