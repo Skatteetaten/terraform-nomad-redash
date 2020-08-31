@@ -48,3 +48,17 @@ clean: destroy-box remove-tmp
 # helper commands
 update-box:
 	@SSL_CERT_FILE=${SSL_CERT_FILE} CURL_CA_BUNDLE=${CURL_CA_BUNDLE} vagrant box update || (echo '\n\nIf you get an SSL error you might be behind a transparent proxy. \nMore info https://github.com/fredrikhgrelland/vagrant-hashistack/blob/master/README.md#if-you-are-behind-a-transparent-proxy\n\n' && exit 2)
+
+proxy-redash:
+	consul connect proxy -service=proxy-to-redash -upstream=redash-redash-server-service:7070 -log-level=TRACE
+
+proxy-presto:
+	consul connect proxy -service=proxy-to-presto -upstream=presto:8080 -log-level=TRACE
+
+proxy-minio:
+	consul connect proxy -service=proxy-to-minio -upstream=minio:9090 -log-level=TRACE
+
+connect-to-all:
+	gnome-terminal -- make proxy-redash
+	gnome-terminal -- make proxy-presto
+	gnome-terminal -- make proxy-minio
