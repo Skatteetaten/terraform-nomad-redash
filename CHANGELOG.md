@@ -3,7 +3,10 @@
 ## [0.1.0 UNRELEASED]
 
 ### Added
-- link to proxy section when make template-example command fails
+- update-box as a prereq for the template-example target in the makefile
+
+### Fixed
+- Corrected the link to the proxy section that shows up when the make command fails
 
 ## [0.0.2]
 
