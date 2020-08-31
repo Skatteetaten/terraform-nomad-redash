@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.0.2 UNRELEASED]
+## [0.0.2]
 
 ### Changed
 - Increased resources allocated to vagrant-box
