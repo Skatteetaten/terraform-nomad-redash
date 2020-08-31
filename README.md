@@ -31,6 +31,7 @@ which will open 3 terminal windows each with a connection to one of the componen
 
 #### Required software
 - [GNU make](https://man7.org/linux/man-pages/man1/make.1.html)
+- [consul](https://www.consul.io/)
 
 ### Providers
 This module uses the [Nomad](https://registry.terraform.io/providers/hashicorp/nomad/latest/docs).
