@@ -1,5 +1,5 @@
 job "redis" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
   priority    = 100
 
@@ -32,7 +32,7 @@ job "redis" {
     task "redis-service" {
       driver = "docker"
       config {
-        image = "redis:3-alpine"
+        image = "${image}"
       }
     }
   }

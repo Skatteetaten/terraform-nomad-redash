@@ -1,26 +1,53 @@
+locals {
+  datacenters = join(",", var.nomad_datacenters)
+}
 
 data "template_file" "nomad_job_redash_server" {
   template = file("${path.module}/conf/nomad/redash_server.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.redash_container_image
+  }
 }
 
 data "template_file" "nomad_job_redash_worker" {
   template = file("${path.module}/conf/nomad/redash_worker.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.redash_container_image
+  }
 }
 
 data "template_file" "nomad_job_redash_scheduler" {
   template = file("${path.module}/conf/nomad/redash_scheduler.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.redash_container_image
+  }
 }
 
 data "template_file" "nomad_job_postgres" {
   template = file("${path.module}/conf/nomad/postgres.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.postgres_container_image
+  }
 }
 
 data "template_file" "nomad_job_redis" {
   template = file("${path.module}/conf/nomad/redis.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.redis_container_image
+  }
 }
 
 data "template_file" "nomad_job_email" {
   template = file("${path.module}/conf/nomad/email.hcl")
+  vars = {
+    datacenters = local.datacenters
+    image       = var.email_container_image
+  }
 }
 
 resource "nomad_job" "nomad_job_redash_server" {

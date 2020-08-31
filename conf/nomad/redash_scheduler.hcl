@@ -1,5 +1,5 @@
 job "redash-scheduler" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
 
   group "redash-scheduler" {
@@ -35,7 +35,7 @@ job "redash-scheduler" {
     task "redash-scheduler" {
       driver = "docker"
       config {
-        image = "redash/redash:8.0.2.b37747"
+        image = "${image}"
         args = ["scheduler"]
       }
 

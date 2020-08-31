@@ -1,5 +1,5 @@
 job "redash-email" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
   priority    = 100
   
@@ -29,7 +29,7 @@ job "redash-email" {
     task "email-service" {
       driver = "docker"
       config {
-        image = "djfarrelly/maildev:1.1.0"
+        image = "${image}"
       }
     }
   }

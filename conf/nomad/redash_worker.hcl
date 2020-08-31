@@ -1,5 +1,5 @@
 job "redash-worker" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
 
   group "redash-worker" {
@@ -40,7 +40,7 @@ job "redash-worker" {
     task "redash-worker" {
       driver = "docker"
       config {
-        image = "redash/redash:8.0.2.b37747"
+        image = "${image}"
         args = ["worker"]
       }
 

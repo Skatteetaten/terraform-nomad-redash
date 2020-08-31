@@ -1,5 +1,5 @@
 job "redash-postgres" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
   priority    = 100
 
@@ -31,7 +31,7 @@ job "redash-postgres" {
     task "postgres-service" {
       driver = "docker"
       config {
-        image = "postgres:9.5-alpine"
+        image = "${image}"
         command = "postgres"
         args = [
           "-c",
