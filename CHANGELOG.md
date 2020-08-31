@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.0 UNRELEASED]
+
+### Added
+- link to proxy section when make template-example command fails
+
 ## [0.0.2]
 
 ### Changed
