@@ -17,6 +17,7 @@ data "template_file" "nomad_job_redash_server" {
   template = file("${path.module}/conf/nomad/redash_server.hcl")
   vars = {
     postgres_service_name = module.postgres.service_name
+    postgres_port         = module.postgres.port
     postgres_user         = module.postgres.username
     postgres_password     = module.postgres.password
   }
@@ -26,6 +27,7 @@ data "template_file" "nomad_job_redash_worker" {
   template = file("${path.module}/conf/nomad/redash_worker.hcl")
   vars = {
     postgres_service_name = module.postgres.service_name
+    postgres_port         = module.postgres.port
     postgres_user         = module.postgres.username
     postgres_password     = module.postgres.password
   }
@@ -35,6 +37,7 @@ data "template_file" "nomad_job_redash_scheduler" {
   template = file("${path.module}/conf/nomad/redash_scheduler.hcl")
   vars = {
     postgres_service_name = module.postgres.service_name
+    postgres_port         = module.postgres.port
     postgres_user         = module.postgres.username
     postgres_password     = module.postgres.password
   }
