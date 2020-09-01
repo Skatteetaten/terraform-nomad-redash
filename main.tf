@@ -1,6 +1,12 @@
 
 data "template_file" "nomad_job_redash_server" {
   template = file("${path.module}/conf/nomad/redash_server.hcl")
+
+  vars = {
+    redash_admin_username = var.redash_admin_username
+    redash_admin_password = var.redash_admin_password
+    redash_admin_email_id  = var.redash_admin_email_id
+  }
 }
 
 data "template_file" "nomad_job_redash_worker" {
