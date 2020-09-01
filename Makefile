@@ -63,7 +63,19 @@ proxy-presto: check_for_consul_binary
 proxy-minio: check_for_consul_binary
 	consul connect proxy -service=proxy-to-minio -upstream=minio:9090 -log-level=TRACE
 
-connect-to-all: check_for_consul_binary
+OS = $(shell uname)
+PWD = $(shell pwd)
+connect-to-all:
+ifeq ($(OS), Linux)
 	gnome-terminal -- make proxy-redash
 	gnome-terminal -- make proxy-presto
 	gnome-terminal -- make proxy-minio
+endif
+ifeq ($(OS), Darwin)
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-redash"'
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-presto"'
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-minio"'
+endif
+ifeq ($(OS),)
+	@echo "You are not on a Linux or Mac. You will need to run the proxies separately:\n  make proxy-redash\n  make proxy-presto\n  make proxy-minio"
+endif
