@@ -20,8 +20,8 @@ job "redash-scheduler" {
               local_bind_port = 6379
             }
             upstreams {
-              destination_name = "redash-postgres-service"
-              local_bind_port = 5432
+              destination_name = "${postgres_service_name}"
+              local_bind_port = "${postgres_port}"
             }
             upstreams {
               destination_name = "redash-email-service"

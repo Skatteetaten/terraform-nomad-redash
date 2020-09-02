@@ -6,6 +6,8 @@
 - update-box as a prereq for the template-example target in the makefile
 - Check for presence of consul binary
 - Consul in the Required software section of the README file
+- Implemented terraform-nomad-postgres module instead of local postgres
+- Added postgres variables
 - default admin user for redash on startup
 
 ### Fixed

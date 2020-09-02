@@ -29,8 +29,8 @@ job "redash-server" {
               local_bind_port = 6379
             }
             upstreams {
-              destination_name = "redash-postgres-service"
-              local_bind_port = 5432
+              destination_name = "${postgres_service_name}"
+              local_bind_port = "${postgres_port}"
             }
             upstreams {
               destination_name = "redash-email-service"
@@ -60,7 +60,7 @@ job "redash-server" {
         PYTHONUNBUFFERED = 0
         REDASH_LOG_LEVEL = "INFO"
         REDASH_REDIS_URL = "redis://$${NOMAD_UPSTREAM_ADDR_redash_redis_service}/0"
-        REDASH_DATABASE_URL = "postgresql://postgres@$${NOMAD_UPSTREAM_ADDR_redash_postgres_service}/postgres"
+        REDASH_DATABASE_URL = "postgresql://${postgres_user}:${postgres_password}@$${NOMAD_UPSTREAM_ADDR_${postgres_service_name}}/${postgres_service_name}"
         REDASH_RATELIMIT_ENABLED = "false"
         REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
         REDASH_MAIL_SERVER = "http://$${NOMAD_UPSTREAM_ADDR_redash_email_service}"
