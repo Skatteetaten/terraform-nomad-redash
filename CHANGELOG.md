@@ -9,6 +9,7 @@
 
 ### Fixed
 - Corrected the link to the proxy section that shows up when the make command fails
+- Makefile `connect-to-all` supports opening multiple terminals for both Linux and MacOS
 
 ## [0.0.2]
 
