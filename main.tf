@@ -5,6 +5,9 @@ data "template_file" "nomad_job_redash_server" {
     postgres_port         = var.postgres_port
     postgres_user         = var.postgres_username
     postgres_password     = var.postgres_password
+    redash_admin_username = var.redash_admin_username
+    redash_admin_password = var.redash_admin_password
+    redash_admin_email_id = var.redash_admin_email_id
   }
 }
 

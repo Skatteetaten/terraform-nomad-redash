@@ -1,18 +1,3 @@
-module "postgres" {
-  source = "github.com/fredrikhgrelland/terraform-nomad-postgres.git?ref=0.0.1"
-  # nomad
-  nomad_datacenters = ["dc1"]
-  nomad_namespace = "default"
-  # postgres
-  postgres_service_name     = "postgres"
-  postgres_container_image  = "postgres:12-alpine"
-  postgres_container_port   = 5432
-  postgres_admin_user       = "hive"
-  postgres_admin_password   = "hive"
-  postgres_database         = "metastore"
-  postgres_container_environment_variables = ["PGDATA=/var/lib/postgresql/data"]
-}
-
 module "redash" {
   source = "../../"
   # postgres
@@ -20,8 +5,26 @@ module "redash" {
   postgres_port         = module.postgres.port
   postgres_username     = module.postgres.username
   postgres_password     = module.postgres.password
+  redash_admin_username = "admin"
+  redash_admin_password = "admin123"
+  redash_admin_email_id = "admin@mail.com"
 
   depends_on = [
     module.postgres
   ]
+}
+
+output "redash_username"{
+  description = "Redash admin username"
+  value       = module.redash.redash_admin_username
+}
+
+output "redash_password" {
+  description = "Redash admin password"
+  value       = module.redash.redash_admin_password
+}
+
+output "redash_email_id" {
+  description = "Redash admin email id"
+  value       = module.redash.redash_admin_email_id
 }

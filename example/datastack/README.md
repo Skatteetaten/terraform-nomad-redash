@@ -38,7 +38,7 @@ When provisioning of the example is finished you can then open up access to Reda
 make connect-to-all
 ```
 
-> :warning: [gnome-terminal](https://help.gnome.org/users/gnome-terminal/stable/) is required for the command above. If you do not have gnome-terminal you can run `make proxy-redash`, `make proxy-presto`, and `make proxy-presto` in three separate terminal windows to achieve the same as `make connect-to-all`.
+> :warning: this feature is only supported for Linux ([gnome-terminal](https://help.gnome.org/users/gnome-terminal/stable/)) and MacOS ([Default Terminal](https://en.wikipedia.org/wiki/Terminal_(macOS))). If you do have problems you can run `make proxy-redash`, `make proxy-presto`, and `make proxy-presto` in three separate terminal windows to achieve the same as `make connect-to-all`.
 
 You will now have access to Redash, Presto, and MinIO on the addresses below:
 

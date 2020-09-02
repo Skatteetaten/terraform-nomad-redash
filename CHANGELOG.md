@@ -7,10 +7,12 @@
 - Check for presence of consul binary
 - Consul in the Required software section of the README file
 - Implemented terraform-nomad-postgres module instead of local postgres
-- Added postgres variables 
+- Added postgres variables
+- default admin user for redash on startup
 
 ### Fixed
 - Corrected the link to the proxy section that shows up when the make command fails
+- Makefile `connect-to-all` supports opening multiple terminals for both Linux and MacOS
 
 ## [0.0.2]
 
