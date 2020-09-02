@@ -10,18 +10,6 @@ variable "postgres_port" {
   default = 5432
 }
 
-variable "postgres_image" {
-  type = string
-  description = "Postgres container image"
-  default = "postgres:12-alpine"
-}
-
-variable "postgres_database_name" {
-  type = string
-  description = "Postgres database name"
-  default = "metastore"
-}
-
 variable "postgres_username" {
   type = string
   description = "Postgres username"

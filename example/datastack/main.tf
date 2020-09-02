@@ -1,7 +1,3 @@
-module "redash" {
-  source = "../../"
-}
-
 module "minio" {
   source = "github.com/fredrikhgrelland/terraform-nomad-minio.git?ref=0.0.2"
   # nomad
@@ -20,6 +16,21 @@ module "minio" {
   mc_service_name = "mc"
   mc_container_image = "minio/mc:latest" # todo: avoid using tag latest in future releases
   mc_container_environment_variables = ["JUST_EXAMPLE_VAR3=some-value", "ANOTHER_EXAMPLE4=some-other-value"]
+}
+
+module "postgres" {
+  source = "github.com/fredrikhgrelland/terraform-nomad-postgres.git?ref=0.0.1"
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace = "default"
+  # postgres
+  postgres_service_name     = "postgres"
+  postgres_container_image  = "postgres:12-alpine"
+  postgres_container_port   = 5432
+  postgres_admin_user       = "hive"
+  postgres_admin_password   = "hive"
+  postgres_database         = "metastore"
+  postgres_container_environment_variables = ["PGDATA=/var/lib/postgresql/data"]
 }
 
 module "hive" {
@@ -46,16 +57,16 @@ module "hive" {
   }
   # hive - postgres
   postgres_service = {
-    service_name  = module.redash.postgres_service_name
-    port          = module.redash.postgres_port
-    database_name = module.redash.postgres_database_name
-    username      = module.redash.postgres_username
-    password      = module.redash.postgres_password
+    service_name  = module.postgres.service_name
+    port          = module.postgres.port
+    database_name = module.postgres.database_name
+    username      = module.postgres.username
+    password      = module.postgres.password
   }
 
   depends_on = [
     module.minio,
-    module.redash
+    module.postgres
   ]
 }
 
@@ -85,5 +96,18 @@ module "presto" {
   depends_on = [
     module.minio,
     module.hive
+  ]
+}
+
+module "redash" {
+  source = "../../"
+  # postgres
+  postgres_service_name = module.postgres.service_name
+  postgres_port         = module.postgres.port
+  postgres_username     = module.postgres.username
+  postgres_password     = module.postgres.password
+
+  depends_on = [
+    module.presto
   ]
 }
