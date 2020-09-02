@@ -55,7 +55,7 @@ update-box:
 	@SSL_CERT_FILE=${SSL_CERT_FILE} CURL_CA_BUNDLE=${CURL_CA_BUNDLE} vagrant box update || (echo '\n\nIf you get an SSL error you might be behind a transparent proxy. \nMore info https://github.com/fredrikhgrelland/vagrant-hashistack/blob/master/README.md#proxy\n\n' && exit 2)
 
 proxy-redash: check_for_consul_binary
-	consul connect proxy -service=proxy-to-redash -upstream=redash-redash-server-service:7070 -log-level=TRACE
+	consul connect proxy -service=proxy-to-redash -upstream=redash-server-service:7070 -log-level=TRACE
 
 proxy-presto: check_for_consul_binary
 	consul connect proxy -service=proxy-to-presto -upstream=presto:8080 -log-level=TRACE
@@ -63,7 +63,19 @@ proxy-presto: check_for_consul_binary
 proxy-minio: check_for_consul_binary
 	consul connect proxy -service=proxy-to-minio -upstream=minio:9090 -log-level=TRACE
 
-connect-to-all: check_for_consul_binary
+OS = $(shell uname)
+PWD = $(shell pwd)
+connect-to-all:
+ifeq ($(OS), Linux)
 	gnome-terminal -- make proxy-redash
 	gnome-terminal -- make proxy-presto
 	gnome-terminal -- make proxy-minio
+endif
+ifeq ($(OS), Darwin)
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-redash"'
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-presto"'
+	osascript -e 'tell application "Terminal" to do script "cd $(PWD); make proxy-minio"'
+endif
+ifeq ($(OS),)
+	@echo "You are not on a Linux or Mac. You will need to run the proxies separately:\n  make proxy-redash\n  make proxy-presto\n  make proxy-minio"
+endif

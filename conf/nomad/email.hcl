@@ -10,8 +10,8 @@ job "redash-email" {
     }
 
     service {
-      name = "redash-email-service"
-      port = 80
+      name = "${email_service_name}"
+      port = "${email_port}"
       tags = ["redash", "email"]
       check {
         expose    = true
@@ -29,7 +29,7 @@ job "redash-email" {
     task "email-service" {
       driver = "docker"
       config {
-        image = "${image}"
+        image = "${email_image}"
       }
     }
   }

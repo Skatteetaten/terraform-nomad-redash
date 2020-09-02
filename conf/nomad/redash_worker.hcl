@@ -3,60 +3,59 @@ job "redash-worker" {
   type        = "service"
 
   group "redash-worker" {
-    count = 1
+    count = "${redash_worker_count}"
 
     network {
       mode = "bridge"
     }
 
     service {
-      name = "redash-worker-service"
+      name = "${redash_worker_service_name}" # "redash-worker-service"
       tags = ["redash", "redash-worker"]
       connect {
         sidecar_service {
           proxy {
             upstreams {
-              destination_name = "redash-redis-service"
-              local_bind_port = 6379
+              destination_name = "${redis_service_name}" # "redash-redis-service"
+              local_bind_port  = "${redis_port}" # 6379
             }
             upstreams {
-              destination_name = "redash-postgres-service"
-              local_bind_port = 5432
+              destination_name = "${postgres_service_name}"
+              local_bind_port  = "${postgres_port}"
             }
             upstreams {
-              destination_name = "redash-email-service"
-              local_bind_port = 80
+              destination_name = "${email_service_name}" # "redash-email-service"
+              local_bind_port  = "${email_port}" # 80
             }
             upstreams {
-              destination_name = "presto"
-              local_bind_port = 8080
+              destination_name = "${presto_service_name}"# "presto"
+              local_bind_port  = "${presto_container_port}"# 8080
             }
           }
         }
       }
-      
     }
 
     task "redash-worker" {
-      driver = "docker"
+      driver  = "docker"
       config {
-        image = "${image}"
-        args = ["worker"]
+        image = "${redash_image}"
+        args  = ["worker"]
       }
 
       env {
-        PYTHONUNBUFFERED = 0
-        REDASH_LOG_LEVEL = "INFO"
-        REDASH_REDIS_URL = "redis://$${NOMAD_UPSTREAM_ADDR_redash_redis_service}/0"
-        REDASH_DATABASE_URL = "postgresql://postgres@$${NOMAD_UPSTREAM_ADDR_redash_postgres_service}/postgres"
+        PYTHONUNBUFFERED           = 0
+        REDASH_LOG_LEVEL           = "INFO"
+        REDASH_REDIS_URL           = "redis://$${NOMAD_UPSTREAM_ADDR_${redis_service_name}}/0"
+        REDASH_DATABASE_URL        = "postgresql://${postgres_username}:${postgres_password}@$${NOMAD_UPSTREAM_ADDR_${postgres_service_name}}/${postgres_service_name}"
         REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
-        REDASH_MAIL_SERVER = "http://$${NOMAD_UPSTREAM_ADDR_redash_email_service}"
-        REDASH_MAIL_PORT = 25
+        REDASH_MAIL_SERVER         = "http://$${NOMAD_UPSTREAM_ADDR_${email_service_name}}"
+        REDASH_MAIL_PORT           = "${redash_mail_port}"
       }
 
       resources {
-          cpu    = 500
-          memory = 1028
+          cpu    = "${redash_cpu}"
+          memory = "${redash_memory}"
       }
     }
   }

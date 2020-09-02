@@ -3,29 +3,29 @@ job "redash-scheduler" {
   type        = "service"
 
   group "redash-scheduler" {
-    count = 1
+    count = "${redash_scheduler_count}"
 
     network {
       mode = "bridge"
     }
 
     service {
-      name = "redash-redash-scheduler-service"
+      name = "${redash_scheduler_service_name}"
       tags = ["redash", "redash-scheduler"]
       connect {
         sidecar_service {
           proxy {
             upstreams {
-              destination_name = "redash-redis-service"
-              local_bind_port = 6379
+              destination_name = "${redis_service_name}"
+              local_bind_port  = "${redis_port}"
             }
             upstreams {
-              destination_name = "redash-postgres-service"
-              local_bind_port = 5432
+              destination_name = "${postgres_service_name}"
+              local_bind_port  = "${postgres_port}"
             }
             upstreams {
-              destination_name = "redash-email-service"
-              local_bind_port = 80
+              destination_name = "${email_service_name}"
+              local_bind_port  = "${email_port}"
             }
           }
         }
@@ -35,20 +35,20 @@ job "redash-scheduler" {
     task "redash-scheduler" {
       driver = "docker"
       config {
-        image = "${image}"
-        args = ["scheduler"]
+        image = "${redash_image}"
+        args  = ["scheduler"]
       }
 
       env {
-        REDASH_REDIS_URL = "redis://$${NOMAD_UPSTREAM_ADDR_redash_redis_service}/0"
+        REDASH_REDIS_URL           = "redis://$${NOMAD_UPSTREAM_ADDR_${redis_service_name}}/0"
         REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
-        REDASH_MAIL_SERVER = "http://$${NOMAD_UPSTREAM_ADDR_redash_email_service}"
-        REDASH_MAIL_PORT = 25
+        REDASH_MAIL_SERVER         = "http://$${NOMAD_UPSTREAM_ADDR_${email_service_name}}"
+        REDASH_MAIL_PORT           = "${redash_mail_port}"
       }
 
       resources {
-          cpu    = 500
-          memory = 1028
+        cpu    = "${redash_cpu}"
+        memory = "${redash_memory}"
       }
     }
   }
