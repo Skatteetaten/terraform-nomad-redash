@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.0 UNRELEASED]
+
+### Added
+- Implemented terraform-nomad-postgres module instead of local postgres
+- Added postgres variables 
+
+### Fixed
+
 ## [0.0.2]
 
 ### Changed
