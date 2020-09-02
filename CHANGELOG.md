@@ -6,6 +6,7 @@
 - update-box as a prereq for the template-example target in the makefile
 - Check for presence of consul binary
 - Consul in the Required software section of the README file
+- default admin user for redash on startup
 
 ### Fixed
 - Corrected the link to the proxy section that shows up when the make command fails

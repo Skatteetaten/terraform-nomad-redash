@@ -15,7 +15,7 @@
 
 ## Compatibility
 |Software|OSS Version|Enterprise Version|
-|:--|:--|:--|
+|:---|:---|:---|
 |Terraform|0.13.1 or newer||
 |Consul|1.8.3 or newer|1.8.3 or newer|
 |Vault|1.5.2.1 or newer|1.5.2.1 or newer|
@@ -31,14 +31,19 @@ See [template README's prerequisites](template_README.md#install-prerequisites).
 This module uses the [Nomad](https://registry.terraform.io/providers/hashicorp/nomad/latest/docs) provider.
 
 ## Inputs
-|Name     |Description     |Type    |Default |Required  |
-|:--|:--|:--|:-:|:-:|
-|         |                |bool    |true    |yes        |
+Name     |Description     |Type    |Default |Required   |
+|:---|:---|:---|:---|:---|
+|   redash_email_id   | Redash admin username| string    |admin@mail.com    |   no |
+|   redash_password  |  Redash admin password| string    |admin123         |    no |
+|   redash_username |   Redash admin username| string    |admin           |     no |
+
 
 ## Outputs
 |Name     |Description     |Type    |Default |Required   |
-|:--|:--|:--|:-:|:-:|
-|         |                |bool    |true    |yes         |
+|:---|:---|:---|:---|:---|
+|   redash_email_id   | Redash admin username| string    |admin@mail.com    |   no |
+|   redash_password  |  Redash admin password| string    |admin123         |    no |
+|   redash_username |   Redash admin username| string    |admin           |     no |
 
 ## Examples
  Import module:

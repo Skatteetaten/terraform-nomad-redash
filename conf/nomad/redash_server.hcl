@@ -52,7 +52,7 @@ job "redash-server" {
         command = "/bin/bash"
         args = [
           "-c",
-          "python /app/manage.py database create_tables && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
+          "python /app/manage.py database create_tables && python /app/manage.py users create_root ${redash_admin_email_id} ${redash_admin_username} --password ${redash_admin_password} --org default && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
         ]
       }
 
