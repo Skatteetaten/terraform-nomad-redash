@@ -5,9 +5,6 @@ module "redash" {
   postgres_container_port = module.postgres.port
   postgres_username       = module.postgres.username
   postgres_password       = module.postgres.password
-  redash_admin_username   = "admin"
-  redash_admin_password   = "admin123"
-  redash_admin_email_id   = "admin@mail.com"
   # presto
   presto_service_name     = module.presto.presto_service_name
   presto_container_port   = module.presto.presto_port
