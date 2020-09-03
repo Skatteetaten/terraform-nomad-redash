@@ -4,7 +4,7 @@ job "redash-redis" {
   priority    = 100
 
   group "redash-redis" {
-    count = 1
+    count = "${redis_count}"
     network {
       mode = "bridge"
     }

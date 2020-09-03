@@ -10,26 +10,26 @@ job "redash-worker" {
     }
 
     service {
-      name = "${redash_worker_service_name}" # "redash-worker-service"
+      name = "${redash_worker_service_name}"
       tags = ["redash", "redash-worker"]
       connect {
         sidecar_service {
           proxy {
             upstreams {
-              destination_name = "${redis_service_name}" # "redash-redis-service"
-              local_bind_port  = "${redis_port}" # 6379
+              destination_name = "${redis_service_name}"
+              local_bind_port  = "${redis_port}"
             }
             upstreams {
               destination_name = "${postgres_service_name}"
               local_bind_port  = "${postgres_port}"
             }
             upstreams {
-              destination_name = "${email_service_name}" # "redash-email-service"
-              local_bind_port  = "${email_port}" # 80
+              destination_name = "${email_service_name}"
+              local_bind_port  = "${email_port}"
             }
             upstreams {
-              destination_name = "${presto_service_name}"# "presto"
-              local_bind_port  = "${presto_container_port}"# 8080
+              destination_name = "${presto_service_name}"
+              local_bind_port  = "${presto_container_port}"
             }
           }
         }

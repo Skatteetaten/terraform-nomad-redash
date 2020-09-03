@@ -98,6 +98,7 @@ data "template_file" "nomad_job_redis" {
     redis_service_name = var.redis_service_name
     redis_image        = var.redis_container_image
     redis_port         = var.redis_container_port
+    redis_count        = var.redis_count
   }
 }
 
@@ -110,6 +111,7 @@ data "template_file" "nomad_job_email" {
     email_service_name = var.email_service_name
     email_image        = var.email_container_image
     email_port         = var.email_container_port
+    email_count        = var.email_count
   }
 }
 

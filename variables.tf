@@ -36,6 +36,12 @@ variable "email_container_image" {
   default     = "djfarrelly/maildev:1.1.0"
 }
 
+variable "email_count" {
+  type        = number
+  description = "Email count"
+  default     = 1
+}
+
 # Presto
 variable "presto_service_name" {
   type        = string
@@ -66,6 +72,12 @@ variable "redis_container_image" {
   type        = string
   description = "Redis container image"
   default     = "redis:3-alpine"
+}
+
+variable "redis_count" {
+  type        = number
+  description = "Redis count"
+  default     = 1
 }
 
 # Postgres

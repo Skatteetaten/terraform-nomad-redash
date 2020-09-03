@@ -4,7 +4,7 @@ job "redash-email" {
   priority    = 100
   
   group "redash-email" {
-    count = 1
+    count = "${email_count}"
     network {
       mode = "bridge"
     }
