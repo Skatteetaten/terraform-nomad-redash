@@ -1,13 +1,10 @@
 module "redash" {
   source = "../../"
   # postgres
-  postgres_service_name = module.postgres.service_name
-  postgres_port         = module.postgres.port
-  postgres_username     = module.postgres.username
-  postgres_password     = module.postgres.password
-  redash_admin_username = "admin"
-  redash_admin_password = "admin123"
-  redash_admin_email_id = "admin@mail.com"
+  postgres_service_name   = module.postgres.service_name
+  postgres_container_port = module.postgres.port
+  postgres_username       = module.postgres.username
+  postgres_password       = module.postgres.password
 
   depends_on = [
     module.postgres

@@ -1,17 +1,17 @@
-job "redis" {
-  datacenters = ["dc1"]
+job "redash-redis" {
+  datacenters = "${datacenters}"
   type        = "service"
   priority    = 100
 
-  group "redis" {
-    count = 1
+  group "redash-redis" {
+    count = "${redis_count}"
     network {
       mode = "bridge"
     }
 
     service {
-      name = "redash-redis-service"
-      port = 6379
+      name = "${redis_service_name}"
+      port = "${redis_port}"
       tags = ["redash", "redis"]
 
       check {
@@ -32,7 +32,7 @@ job "redis" {
     task "redis-service" {
       driver = "docker"
       config {
-        image = "redis:3-alpine"
+        image = "${redis_image}"
       }
     }
   }

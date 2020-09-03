@@ -1,17 +1,17 @@
 job "redash-email" {
-  datacenters = ["dc1"]
+  datacenters = "${datacenters}"
   type        = "service"
   priority    = 100
   
   group "redash-email" {
-    count = 1
+    count = "${email_count}"
     network {
       mode = "bridge"
     }
 
     service {
-      name = "redash-email-service"
-      port = 80
+      name = "${email_service_name}"
+      port = "${email_port}"
       tags = ["redash", "email"]
       check {
         expose    = true
@@ -29,7 +29,7 @@ job "redash-email" {
     task "email-service" {
       driver = "docker"
       config {
-        image = "djfarrelly/maildev:1.1.0"
+        image = "${email_image}"
       }
     }
   }
