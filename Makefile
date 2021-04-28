@@ -79,3 +79,34 @@ endif
 ifeq ($(OS),)
 	@echo "You are not on a Linux or Mac. You will need to run the proxies separately:\n  make proxy-redash\n  make proxy-presto\n  make proxy-minio"
 endif
+
+template_init:
+	#
+	@echo "${RED}\nWarning! This will clean your template. Do you want to continue? [y/n]${RESET}" ; \
+	read answer; \
+	if [ "$$answer" != "y" ]; then \
+		echo "Aborting!" ; \
+		exit 1 ; \
+	fi
+
+	@echo "\nStarting to clean your template!"
+
+	@for folder in "template_example" "example/vagrant_box_example" "CHANGELOG.md" ; do \
+		echo "Deleting: $$folder " ; \
+		rm -rf $$folder && echo "${GREEN}Success${RESET}" || echo "${RED}Failed${RESET}" ; \
+	done
+
+	@echo -n "\nMoving README.md to .github/template_specific as old_README.md "
+	mv README.md .github/template_specific/old_README.md && echo "${GREEN}Success${RESET}" || echo "${RED}Failed${RESET}"
+
+	@echo -n "Moving GETTING_STARTED/ to .github/template_specific/GETTING_STARTED "
+	mv GETTING_STARTED .github/template_specific/ && echo "${GREEN}Success${RESET}" || echo "${RED}Failed${RESET}"
+
+	@echo -n "\nCreating a clean README.md "
+	cat .github/template_specific/README_template.md >> README.md && echo "${GREEN}Success${RESET}" || echo "${RED}Failed${RESET}"
+
+	@echo -n "Creating a clean CHANGELOG.md "
+	echo "# Changelog\n\n## 0.0.1 [UNRELEASED]\n\n###Added\n\n###Changed\n\n###Fixed\n" >> CHANGELOG.md && echo "${GREEN}Success${RESET}" || echo "${RED}Failed${RESET}"
+
+	@echo "${BLUE}\nDone! You are all set to start developing!${RESET}"
+	@echo "${YELLOW}\nPS! If you want to keep a deleted folder, you can undo by running:\n  git reset HEAD <file/folder>\n  git checkout -- <file/folder>${RESET}"
