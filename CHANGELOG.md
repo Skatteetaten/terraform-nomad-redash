@@ -3,7 +3,7 @@
 ## [0.1.0 UNRELEASED]
 
 ### Updated
-- Bump new version of vagrant box ">= 0.4, < 0.5". #32
+- Bump version of vagrant box ">= 0.4, < 0.5". #32
 - Removed unused files/folders and updated the folder structure. #32
 
 ### Added
