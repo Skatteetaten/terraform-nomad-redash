@@ -3,7 +3,7 @@
 ## [0.1.0 UNRELEASED]
 
 ### Updated
-- Bump version of vagrant box ">= 0.4, < 0.5". #32
+- Bump Bump vagrant-hashistack ">= 0.10, < 0.11". #32
 - Removed unused files/folders and updated the folder structure. #32
 
 ### Added
