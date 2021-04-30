@@ -2,7 +2,12 @@
 .idea
 packer/output-hashistack
 terraform.tfstate*
+.terraform.tfstate.lock.info
+docker/conf/certificates/certs.pem
 .terraform
 .minio.sys
 tmp
 docker/conf/certificates/*.crt
+docker/conf/certificates/*.pem
+super-linter.log
+persistence/nifi/*

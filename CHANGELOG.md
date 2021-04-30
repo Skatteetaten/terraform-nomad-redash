@@ -2,6 +2,10 @@
 
 ## [0.1.0 UNRELEASED]
 
+### Updated
+- Bump vagrant-hashistack ">= 0.10, < 0.11". #32
+- Removed unused files/folders and updated the folder structure. #32
+
 ### Added
 - update-box as a prereq for the template-example target in the makefile
 - Check for presence of consul binary
