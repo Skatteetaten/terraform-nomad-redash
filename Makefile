@@ -54,14 +54,9 @@ clean: destroy-box remove-tmp
 update-box:
 	@SSL_CERT_FILE=${SSL_CERT_FILE} CURL_CA_BUNDLE=${CURL_CA_BUNDLE} vagrant box update || (echo '\n\nIf you get an SSL error you might be behind a transparent proxy. \nMore info https://github.com/fredrikhgrelland/vagrant-hashistack/blob/master/README.md#proxy\n\n' && exit 2)
 
-proxy-redash: check_for_consul_binary
-	consul connect proxy -service=proxy-to-redash -upstream=redash-server-service:7070 -log-level=TRACE
-
-proxy-presto: check_for_consul_binary
-	consul connect proxy -service=proxy-to-presto -upstream=presto:8080 -log-level=TRACE
-
-proxy-minio: check_for_consul_binary
-	consul connect proxy -service=proxy-to-minio -upstream=minio:9090 -log-level=TRACE
+proxy-redash:
+	consul intention create -token=master redash-local redash
+	consul connect proxy -token master -service redash-local -upstream redash-server:5000 -log-level debug
 
 OS = $(shell uname)
 PWD = $(shell pwd)

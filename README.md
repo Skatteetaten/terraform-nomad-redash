@@ -45,7 +45,7 @@ You can verify that Redash ran successful by checking the Redash UI.
 
 First create a proxy to connect with the Redash service:
 ```text
-make redash-proxy
+make proxy-redash
 ```
 
 You can now visit the UI on [localhost:5000/](http://localhost:5000/).
