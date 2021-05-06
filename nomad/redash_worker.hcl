@@ -57,10 +57,10 @@ job "redash-worker" {
         PYTHONUNBUFFERED = 0
         REDASH_LOG_LEVEL = "INFO"
         REDASH_REDIS_URL = "redis://$${NOMAD_UPSTREAM_ADDR_${redis_service}}/0"
-        REDASH_DATABASE_URL        = "postgresql://postgres:postgres@$${NOMAD_UPSTREAM_ADDR_${postgres_service}}/postgres"
+        REDASH_DATABASE_URL        = "postgresql://postgres:postgres@$${NOMAD_UPSTREAM_ADDR_${postgres_service}}/postgres" // TODO! Fetch credentials from Vault
         REDASH_RATELIMIT_ENABLED = "false"
-        REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
-        REDASH_MAIL_SERVER = "email"
+//        REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
+//        REDASH_MAIL_SERVER = "email"
       }
 
       resources {
