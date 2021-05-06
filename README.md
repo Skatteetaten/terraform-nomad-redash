@@ -35,7 +35,7 @@
 All software is provided and run with docker. See the [Makefile](Makefile) for inspiration.
 
 ## Usage
-The following command will run Redis in the [example/redash_one_node](example/redash_one_node) folder.
+The following command will run Redash in the [example/redash_one_node](example/redash_one_node) folder.
 ```sh
 make up 
 ```

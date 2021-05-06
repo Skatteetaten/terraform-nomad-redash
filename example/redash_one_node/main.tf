@@ -8,12 +8,8 @@ module "redash" {
   service         = "redash"
   host            = "127.0.0.1"
   port            = 5000
-  container_image = "redash/redash:9.0.0-beta.b42121"
+  container_image = "redash/redash:8.0.2.b37747"
   use_canary      = false
-  resource_proxy = {
-    cpu    = 200
-    memory = 128
-  }
 }
 
 
@@ -44,7 +40,6 @@ module "postgres" {
   # nomad
   nomad_datacenters = ["dc1"]
   nomad_namespace   = "default"
-  nomad_host_volume = "persistence"
 
   # postgres
   service_name    = "postgres"
@@ -59,7 +54,6 @@ module "postgres" {
   }
   admin_user                      = "postgres"
   admin_password                  = "postgres"
-  database                        = "metastore"
   volume_destination              = "/var/lib/postgresql/data"
   use_host_volume                 = false
   use_canary                      = false

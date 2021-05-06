@@ -28,7 +28,7 @@ variable "port" {
 variable "container_image" {
   type        = string
   description = "Redash docker image"
-  default     = "redash/redash:9.0.0-beta.b42121"
+  default     = "redash/redash:preview"
 }
 variable "resource" {
   type = object({
