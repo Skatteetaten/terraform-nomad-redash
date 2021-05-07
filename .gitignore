@@ -3,6 +3,7 @@
 packer/output-hashistack
 terraform.tfstate*
 .terraform.tfstate.lock.info
+.terraform.lock.hcl
 docker/conf/certificates/certs.pem
 .terraform
 .minio.sys

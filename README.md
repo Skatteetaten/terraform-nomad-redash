@@ -1,16 +1,17 @@
 <!-- markdownlint-disable MD041 -->
 <p align="center"><img width="100px" src="https://www.svgrepo.com/show/48203/chart.svg" align="center" alt="Vagrant-hashistack" /><h2 align="center">Redash Terraform Module</h2></p><p align="center"><a href="https://github.com/fredrikhgrelland/vagrant-hashistack-template" alt="Built on"><img src="https://img.shields.io/badge/Built%20from%20template-Vagrant--hashistack--template-blue?style=for-the-badge&logo=github"/></a><p align="center"><a href="https://github.com/fredrikhgrelland/vagrant-hashistack" alt="Built on"><img src="https://img.shields.io/badge/Powered%20by%20-Vagrant--hashistack-orange?style=for-the-badge&logo=vagrant"/></a></p></p>
 
-## Contents
+## Content
 1. [Compatibility](#compatibility)
-2. [Usage](#usage)
-   1. [Requirements](#requirements)
-      1. [Required software](#required-software)
-   2. [Providers](#providers)
-3. [Inputs](#inputs)
-4. [Outputs](#outputs)
-5. [Examples](#examples)
-6. [Authors](#authors)
+2. [Requirements](#requirements)
+    1. [Required modules](#required-modules)
+    2. [Required software](#required-software)
+3. [Usage](#usage)
+    1. [Verifying setup](#verifying-setup)
+    2. [Providers](#providers)
+4. [Example usage](#example-usage)
+5. [Inputs](#inputs)
+6. [Outputs](#outputs)
 7. [License](#license)
 
 ## Compatibility
@@ -24,45 +25,113 @@
 ## Usage
 ### Requirements
 
-#### Required software
-See [template README's prerequisites](template_README.md#install-prerequisites).
+### Required modules
+| Module | Version |
+|:---|:---|
+| [terraform-nomad-postgres](https://github.com/Skatteetaten/terraform-nomad-postgres) | 0.4.0 or newer |
+| [terraform-nomad-redis](https://github.com/Skatteetaten/terraform-nomad-redis) | 0.1.0 or newer |
 
-### Providers
-This module uses the [Nomad](https://registry.terraform.io/providers/hashicorp/nomad/latest/docs) provider.
+### Required software
+All software is provided and run with docker. See the [Makefile](Makefile) for inspiration.
 
-## Inputs
-Name     |Description     |Type    |Default |Required   |
-|:---|:---|:---|:---|:---|
-|   redash_email_id   | Redash admin username| string    |admin@mail.com    |   no |
-|   redash_password  |  Redash admin password| string    |admin123         |    no |
-|   redash_username |   Redash admin username| string    |admin           |     no |
-
-
-## Outputs
-|Name     |Description     |Type    |Default |Required   |
-|:---|:---|:---|:---|:---|
-|   redash_email_id   | Redash admin username| string    |admin@mail.com    |   no |
-|   redash_password  |  Redash admin password| string    |admin123         |    no |
-|   redash_username |   Redash admin username| string    |admin           |     no |
-
-## Examples
- Import module:
-```hcl-terraform
-module "example"{
-  source = "github.com/fredrikhgrelland/terraform-nomad-redash.git?ref=0.0.1"
-}
+## Usage
+The following command will run Redash in the [example/redash_one_node](example/redash_one_node) folder.
+```sh
+make up 
 ```
 
-There are also several examples using this terraform module:
-
-|Name|Path to Documentation|Description|
-|:--|:--|:--|
-|Datastack|[example/datastack](example/datastack/README.md)|Sets up a full datastack with Redash, Presto, and MinIO|
-|Redash one node|[example/redash_one_node/](example/redash_one_node/README.md)|Sets up a single instance of Redash and its UI|
-
 ### Verifying setup
-Description of expected end result and how to check it. E.g. "After a successful run Presto should be available at localhost:8080".
+You can verify that Redash ran successful by checking the Redash UI.
 
-## Authors
+First create a proxy to connect with the Redash service:
+```text
+make proxy-redash
+```
+
+You can now visit the UI on [localhost:5000/](http://localhost:5000/).
+
+### Providers
+- [Nomad](https://registry.terraform.io/providers/hashicorp/nomad/latest/docs)
+- [Vault](https://registry.terraform.io/providers/hashicorp/vault/latest/docs)
+
+
+## Example usage
+Example-code that shows how to use the module and, if applicable, its different use cases.
+```hcl
+module "redash" {
+  source = "../.."
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
+  # redash
+  service         = "redash"
+  host            = "127.0.0.1"
+  port            = 5000
+  container_image = "redash/redash:9.0.0-beta.b42121"
+}
+
+module "redis" {
+  source = "github.com/Skatteetaten/terraform-nomad-redis.git?ref=0.1.0"
+
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
+  # redis
+  service_name    = "redis"
+  host            = "127.0.0.1"
+  port            = 6379
+  container_image = "redis:3-alpine"
+}
+
+module "postgres" {
+  source = "github.com/Skatteetaten/terraform-nomad-postgres.git?ref=0.4.1"
+
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
+  # postgres
+  service_name    = "postgres"
+  container_image = "postgres:12-alpine"
+  container_port  = 5432
+  vault_secret = {
+    use_vault_provider      = false,
+    vault_kv_policy_name    = "",
+    vault_kv_path           = "",
+    vault_kv_field_username = "",
+    vault_kv_field_password = ""
+  }
+  admin_user                      = "postgres"
+  admin_password                  = "postgres"
+  database                        = "metastore"
+  volume_destination              = "/var/lib/postgresql/data"
+  use_host_volume                 = false
+}
+```
+## Inputs
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| nomad\_datacenters | Nomad data centers | list(string) | ["dc1"] | yes |
+| nomad\_namespace | [Enterprise] Nomad namespace | string | "default" | yes |
+| service | Redash service name | string | "redash" | yes |
+| host | Redash host | string | "127.0.0.1" | yes |
+| port | Redash container port | number | 5000 | yes |
+| container\_image | Redash container image | string | "redash/redash:9.0.0-beta.b42121" | yes |
+| resource | Resource allocations for cpu and memory | obj(number, number)| { <br> cpu = 200, <br> memory = 1024 <br> } | no |
+| resource_proxy | Resource allocations for proxy | obj(number, number)| { <br> cpu = 200, <br> memory = 128 <br> } | no |
+| use\_canary | Uses canary deployment for Redash | bool | false | no |
+| redis\_service | Redis data-object contains service, port and host | obj(string, number, string) | { <br> service = "redis", <br> port = 6379, <br> host = "127.0.0.1" <br> } | no |
+| postgres\_service | Postgres data-object contains service, port and host | obj(string, number, string) | { <br> service = "postgres", <br> port = 5432, <br> host = "127.0.0.1" <br> } | no |
+
+## Outputs
+| Name | Description | Type |
+|------|-------------|------|
+| redash\_server\_service | redash server service name | string |
+| redash\_worker\_service | redash worker service name | string |
+| redash\_scheduler\_service | redash scheduler service name | string |
+
 
 ## License
+This work is licensed under Apache 2 License. See [LICENSE](./LICENSE) for full details.

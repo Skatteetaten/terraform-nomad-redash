@@ -1,27 +1,61 @@
 module "redash" {
-  source = "../../"
+  source = "../.."
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
+  # redash
+  service         = "redash"
+  host            = "127.0.0.1"
+  port            = 5000
+  container_image = "redash/redash:8.0.2.b37747"
+  use_canary      = false
+}
+
+
+module "redis" {
+  source = "github.com/Skatteetaten/terraform-nomad-redis.git?ref=0.1.0"
+
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
+  # redis
+  service_name    = "redis"
+  host            = "127.0.0.1"
+  port            = 6379
+  container_image = "redis:3-alpine"
+  use_canary      = false
+  resource_proxy = {
+    cpu    = 200
+    memory = 128
+  }
+
+}
+
+
+module "postgres" {
+  source = "github.com/Skatteetaten/terraform-nomad-postgres.git?ref=0.4.1"
+
+  # nomad
+  nomad_datacenters = ["dc1"]
+  nomad_namespace   = "default"
+
   # postgres
-  postgres_service_name   = module.postgres.service_name
-  postgres_container_port = module.postgres.port
-  postgres_username       = module.postgres.username
-  postgres_password       = module.postgres.password
-
-  depends_on = [
-    module.postgres
-  ]
-}
-
-output "redash_username"{
-  description = "Redash admin username"
-  value       = module.redash.redash_admin_username
-}
-
-output "redash_password" {
-  description = "Redash admin password"
-  value       = module.redash.redash_admin_password
-}
-
-output "redash_email_id" {
-  description = "Redash admin email id"
-  value       = module.redash.redash_admin_email_id
+  service_name    = "postgres"
+  container_image = "postgres:12-alpine"
+  container_port  = 5432
+  vault_secret = {
+    use_vault_provider      = false,
+    vault_kv_policy_name    = "",
+    vault_kv_path           = "",
+    vault_kv_field_username = "",
+    vault_kv_field_password = ""
+  }
+  admin_user                      = "postgres"
+  admin_password                  = "postgres"
+  volume_destination              = "/var/lib/postgresql/data"
+  use_host_volume                 = false
+  use_canary                      = false
+  container_environment_variables = ["PGDATA=/var/lib/postgresql/data/"]
 }
