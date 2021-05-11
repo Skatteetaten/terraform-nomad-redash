@@ -64,7 +64,7 @@ job "redash-server" {
         command = "/bin/bash"
         args = [
           "-c",
-          "python /app/manage.py database create_tables && python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
+          "python /app/manage.py database create_tables && python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default && python /app/manage.py ds new \"pg\" --type \"pg\" --options '{\"name\": \"pg\", \"dbname\": \"postgres\", \"host\": \"127.0.0.1\", \"password\": \"postgres\", \"port\": 5432, \"user\": \"postgres\"}' --org default && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
         ]
       }
 
