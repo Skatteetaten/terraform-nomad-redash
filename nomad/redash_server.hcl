@@ -46,6 +46,10 @@ job "redash-server" {
               destination_name = "${postgres_service}"
               local_bind_port  = "${postgres_port}"
             }
+            upstreams {
+              destination_name = "${trino_service}"
+              local_bind_port  = "${trino_port}"
+            }
           }
         }
         sidecar_task {
