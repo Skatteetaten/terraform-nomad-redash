@@ -67,17 +67,24 @@ variable "use_canary" {
   default     = false
 }
 
+variable "redash_config_properties" {
+  type        = list(string)
+  description = "Custom redash configuration properties"
+  default     = ["python /app/manage.py database create_tables",
+    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+    "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
+}
+
+
 # Redis
 variable "redis_service" {
   type = object({
     service = string,
     port    = number,
-    host    = string
   })
   default = {
     service = "redis",
     port    = 6379
-    host    = "127.0.0.1"
   }
   description = "Redis data-object contains service, port and host"
 }
@@ -87,12 +94,23 @@ variable "postgres_service" {
   type = object({
     service = string,
     port    = number,
-    host    = string
   })
   default = {
-    service = "postgres",
+    service = "redash-postgres",
     port    = 5432
-    host    = "127.0.0.1"
   }
   description = "Postgres data-object contains service, port and host"
+}
+
+# Trino
+variable "trino_service" {
+  type = object({
+    service = string,
+    port    = number,
+  })
+  default = {
+    service = "trino",
+    port    = 8080
+  }
+  description = "Trino data-object contains service, port and host"
 }

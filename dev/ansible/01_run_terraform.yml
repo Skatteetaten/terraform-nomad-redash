@@ -1,6 +1,6 @@
-- name: Terraform redash_one_node
+- name: Terraform {{ mode }}
   terraform:
-      project_path: ../../example/redash_one_node
+      project_path: ../../example/{{ mode }}
       force_init: true
       state: present
   register: terraform

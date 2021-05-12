@@ -1,15 +1,15 @@
 # Redash
 output "redash_server_service" {
   description = "Redash server service name"
-  value = data.template_file.nomad_job_redash_server.vars.service
+  value       = data.template_file.nomad_job_redash_server.vars.service
 }
 
 output "redash_worker_service" {
   description = "Redash worker service name"
-  value = data.template_file.nomad_job_redash_worker.vars.service
+  value       = data.template_file.nomad_job_redash_worker.vars.service
 }
 
 output "redash_scheduler_service" {
   description = "Redash scheduler service name"
-  value = data.template_file.nomad_job_redash_scheduler.vars.service
+  value       = data.template_file.nomad_job_redash_scheduler.vars.service
 }
