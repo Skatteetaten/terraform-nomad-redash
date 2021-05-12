@@ -1,65 +1,22 @@
 locals {
-  datacenters = join(",", var.nomad_datacenters)
-  //trino_config = format(""%s" --type \"%s\" --options '{\"%s\":\"%s\", \"%s\":\"%s\", \"%s\":\"%s\", \"%s\":\"%s\", \"%s\":\"%s\"}' --org default", "trino", "trino", "catalog", "hive", "host", "127.0.0.1", "port", "8080", "schema", "default", "username", "trino")
-  //  redash_commands = ["python /app/manage.py database create_tables",
-  //    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-  //    "python /app/manage.py ds new \"trino\" --type \"trino\" --options '{\"catalog\": \"hive\", \"host\": \"127.0.0.1\", \"port\": 8080, \"schema\": \"default\", \"username\": \"trino\"}' --org default",
-  //    "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" ]
-//  json_obj = jsonencode( {
-//    catalog: "hive",
-//    host: "127.0.0.1",
-//    port: 8080,
-//    schema: "default",
-//    username: "trino"
-//  })
-
-//  redash_commands = ["python /app/manage.py database create_tables",
-//        "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-//        "python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" " ]
-//  redash_commands = ["python /app/manage.py database create_tables",
-//    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-//    "python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '{\\\"catalog\\\": \\\"hive\\\", \\\"host\\\": \\\"127.0.0.1\\\", \\\"port\\\": 8080, \\\"schema\\\": \\\"default\\\", \\\"username\\\": \\\"trino\\\"}' --org default",
-//    "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" ]
-//  redash_c = format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", local.json_obj)
-
-//  redash_commands = ["python /app/manage.py database create_tables",
-//    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-//    format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.json_obj), "\""), "\"")),
-//    "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" ]
-//  command         = join(" && ", local.redash_commands)
-
-//  command =  <<EOH
-//python /app/manage.py database create_tables &&
-//python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default &&
-//python /app/manage.py ds new "trino" --type "trino" --options ${local.json_obj} --org default &&
-///usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100
-//EOH
-//}
-//    commandtest =  <<EOF
-//python /app/manage.py database create_tables &&
-//python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default &&
-//python /app/manage.py ds new "trino" --type "trino" --options --org default &&
-///usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100
-//EOF
-//
+  datacenters              = join(",", var.nomad_datacenters)
   redash_config_properties = join(" && ", var.redash_config_properties)
-
 }
 
 data "template_file" "nomad_job_redash_server" {
   template = file("${path.module}/nomad/redash_server.hcl")
   vars = {
-    datacenters  = local.datacenters
-    namespace    = var.nomad_namespace
-    image        = var.container_image
-    service      = var.service
-    host         = var.host
-    port         = var.port
-    cpu          = var.resource.cpu
-    memory       = var.resource.memory
-    cpu_proxy    = var.resource_proxy.cpu
-    memory_proxy = var.resource_proxy.memory
-    use_canary   = var.use_canary
+    datacenters              = local.datacenters
+    namespace                = var.nomad_namespace
+    image                    = var.container_image
+    service                  = var.service
+    host                     = var.host
+    port                     = var.port
+    cpu                      = var.resource.cpu
+    memory                   = var.resource.memory
+    cpu_proxy                = var.resource_proxy.cpu
+    memory_proxy             = var.resource_proxy.memory
+    use_canary               = var.use_canary
     redash_config_properties = local.redash_config_properties
     # Redis
     redis_service = var.redis_service.service

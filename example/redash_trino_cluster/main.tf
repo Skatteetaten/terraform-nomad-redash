@@ -1,12 +1,12 @@
 locals {
   nomad_datacenters = ["dc1"]
   nomad_namespace   = "default"
-  trino_datastore = jsonencode( {
-    catalog: "hive",
-    host: "127.0.0.1",
-    port: 8080,
-    schema: "default",
-    username: "trino"
+  trino_datastore = jsonencode({
+    catalog : "hive",
+    host : "127.0.0.1",
+    port : 8080,
+    schema : "default",
+    username : "trino"
   })
 }
 
@@ -20,9 +20,9 @@ module "redash" {
   container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:latest"
   use_canary      = false
   redash_config_properties = ["python /app/manage.py database create_tables",
-      "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-      format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
-      "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" ]
+    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+    format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
+  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
 
   # Redash redis
   redis_service = {
