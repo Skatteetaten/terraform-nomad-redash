@@ -5,14 +5,11 @@ module "redash" {
   nomad_namespace   = "default"
 
   # redash
-  service         = "redash"
+  service_name    = "redash"
   host            = "127.0.0.1"
   port            = 5000
   container_image = "redash/redash:8.0.2.b37747"
   use_canary      = false
-  # Datasource upstream
-  //datasource_upstreams = [{ service_name = "redash-postgres", port = 5432 }]
-
 }
 
 
@@ -33,7 +30,6 @@ module "redash-redis" {
     cpu    = 200
     memory = 128
   }
-
 }
 
 

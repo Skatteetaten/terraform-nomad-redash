@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
     config.vm.boot_timeout = 600
     config.vm.provider "virtualbox" do |vb|
         vb.linked_clone = true
-        vb.memory = 6144
+        vb.memory = 12000
         vb.cpus = 2
     end
     config.vm.provision "ansible_local" do |ansible|

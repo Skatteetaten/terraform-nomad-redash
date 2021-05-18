@@ -14,7 +14,7 @@ module "redash" {
   source = "../.."
 
   # redash
-  service         = "redash"
+  service_name    = "redash"
   host            = "127.0.0.1"
   port            = 5000
   container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:latest"
@@ -26,19 +26,17 @@ module "redash" {
 
   # Redash redis
   redis_service = {
-    service = module.redash-redis.redis_service
-    port    = module.redash-redis.redis_port
+    service_name = module.redash-redis.redis_service
+    port         = module.redash-redis.redis_port
   }
   # Redash postgres
   postgres_service = {
-    service = module.redash-postgres.service_name
-    port    = module.redash-postgres.port
+    service_name = module.redash-postgres.service_name
+    port         = module.redash-postgres.port
   }
-  # Redash trino
-  trino_service = {
-    service = module.trino.trino_service_name
-    port    = 8080
-  }
+
+  # Datasource upstream
+  datasource_upstreams = [{ service_name = module.trino.trino_service_name, port = 8080 }]
 }
 
 
@@ -46,7 +44,7 @@ module "redash-redis" {
   source = "github.com/Skatteetaten/terraform-nomad-redis.git?ref=0.1.0"
 
   # redis
-  service_name    = "redis"
+  service_name    = "redash-redis"
   host            = "127.0.0.1"
   port            = 6379
   container_image = "redis:3-alpine"

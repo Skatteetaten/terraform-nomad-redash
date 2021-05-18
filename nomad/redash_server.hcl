@@ -25,7 +25,7 @@ job "redash-server" {
     }
 
     service {
-      name = "${service}-server"
+      name = "${service_name}-server"
       port = "${port}"
 //      check {
 //        expose    = true

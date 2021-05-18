@@ -25,7 +25,7 @@ job "redash-scheduler" {
     }
 
     service {
-      name = "${service}-scheduler"
+      name = "${service_name}-scheduler"
       connect {
         sidecar_service {
           proxy {

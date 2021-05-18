@@ -23,7 +23,7 @@ job "redash-worker" {
     }
 
     service {
-      name = "${service}-worker"
+      name = "${service_name}-worker"
       connect {
         sidecar_service {
           proxy {

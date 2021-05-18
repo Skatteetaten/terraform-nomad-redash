@@ -10,7 +10,7 @@ variable "nomad_namespace" {
   default     = "default"
 }
 # Redash
-variable "service" {
+variable "service_name" {
   type        = string
   description = "Redash service name"
   default     = "redash"
@@ -79,42 +79,30 @@ variable "redash_config_properties" {
 # Redis
 variable "redis_service" {
   type = object({
-    service = string,
-    port    = number,
+    service_name = string,
+    port         = number,
   })
   default = {
-    service = "redash-redis",
-    port    = 6379
+    service_name = "redash-redis",
+    port         = 6379
   }
-  description = "Redis data-object contains service, port and host"
+  description = "Redis data-object contains service_name and port."
 }
 
 # Postgres
 variable "postgres_service" {
   type = object({
-    service = string,
-    port    = number,
+    service_name = string,
+    port         = number,
   })
   default = {
-    service = "redash-postgres",
-    port    = 5432
+    service_name = "redash-postgres",
+    port         = 5432
   }
-  description = "Postgres data-object contains service, port and host"
+  description = "Postgres data-object contains service and port."
 }
 
-//# Trino
-//variable "trino_service" {
-//  type = object({
-//    service = string,
-//    port    = number,
-//  })
-//  default = {
-//    service = "trino",
-//    port    = 8080
-//  }
-//  description = "Trino data-object contains service, port and host"
-//}
-
+# Datasources
 variable "datasource_upstreams" {
   type = list(object({
     service_name = string,

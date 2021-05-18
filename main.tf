@@ -9,7 +9,7 @@ data "template_file" "nomad_job_redash_server" {
     datacenters              = local.datacenters
     namespace                = var.nomad_namespace
     image                    = var.container_image
-    service                  = var.service
+    service_name             = var.service_name
     host                     = var.host
     port                     = var.port
     cpu                      = var.resource.cpu
@@ -19,10 +19,10 @@ data "template_file" "nomad_job_redash_server" {
     use_canary               = var.use_canary
     redash_config_properties = local.redash_config_properties
     # Redis
-    redis_service = var.redis_service.service
+    redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service
+    postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
     //    # Trino
     //    trino_service = var.trino_service.service
@@ -38,7 +38,7 @@ data "template_file" "nomad_job_redash_worker" {
     datacenters  = local.datacenters
     namespace    = var.nomad_namespace
     image        = var.container_image
-    service      = var.service
+    service_name = var.service_name
     host         = var.host
     port         = var.port
     cpu          = var.resource.cpu
@@ -47,10 +47,10 @@ data "template_file" "nomad_job_redash_worker" {
     memory_proxy = var.resource_proxy.memory
     use_canary   = var.use_canary
     # Redis
-    redis_service = var.redis_service.service
+    redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service
+    postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
     //    # Trino
     //    trino_service = var.trino_service.service
@@ -66,7 +66,7 @@ data "template_file" "nomad_job_redash_scheduler" {
     datacenters  = local.datacenters
     namespace    = var.nomad_namespace
     image        = var.container_image
-    service      = var.service
+    service_name = var.service_name
     host         = var.host
     port         = var.port
     cpu          = var.resource.cpu
@@ -75,10 +75,10 @@ data "template_file" "nomad_job_redash_scheduler" {
     memory_proxy = var.resource_proxy.memory
     use_canary   = var.use_canary
     # Redis
-    redis_service = var.redis_service.service
+    redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service
+    postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
 
   }
