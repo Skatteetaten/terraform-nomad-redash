@@ -83,7 +83,7 @@ variable "redis_service" {
     port    = number,
   })
   default = {
-    service = "redis",
+    service = "redash-redis",
     port    = 6379
   }
   description = "Redis data-object contains service, port and host"
@@ -102,15 +102,24 @@ variable "postgres_service" {
   description = "Postgres data-object contains service, port and host"
 }
 
-# Trino
-variable "trino_service" {
-  type = object({
-    service = string,
-    port    = number,
-  })
-  default = {
-    service = "trino",
-    port    = 8080
-  }
-  description = "Trino data-object contains service, port and host"
+//# Trino
+//variable "trino_service" {
+//  type = object({
+//    service = string,
+//    port    = number,
+//  })
+//  default = {
+//    service = "trino",
+//    port    = 8080
+//  }
+//  description = "Trino data-object contains service, port and host"
+//}
+
+variable "datasource_upstreams" {
+  type = list(object({
+    service_name = string,
+    port         = number,
+  }))
+  description = "List of upstream services (list of object with service_name, port)"
+  default     = []
 }

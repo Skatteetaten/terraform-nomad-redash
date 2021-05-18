@@ -46,10 +46,12 @@ job "redash-server" {
               destination_name = "${postgres_service}"
               local_bind_port  = "${postgres_port}"
             }
+%{ for upstream in jsondecode(upstreams) }
             upstreams {
-              destination_name = "${trino_service}"
-              local_bind_port  = "${trino_port}"
+              destination_name = "${upstream.service_name}"
+              local_bind_port  = "${upstream.port}"
             }
+%{ endfor }
           }
         }
         sidecar_task {

@@ -1,6 +1,6 @@
 locals {
   datacenters              = join(",", var.nomad_datacenters)
-  redash_config_properties = join(" && ", var.redash_config_properties)
+  redash_config_properties = join(" ; ", var.redash_config_properties)
 }
 
 data "template_file" "nomad_job_redash_server" {
@@ -24,9 +24,11 @@ data "template_file" "nomad_job_redash_server" {
     # Postgres
     postgres_service = var.postgres_service.service
     postgres_port    = var.postgres_service.port
-    # Trino
-    trino_service = var.trino_service.service
-    trino_port    = var.trino_service.port
+    //    # Trino
+    //    trino_service = var.trino_service.service
+    //    trino_port    = var.trino_service.port
+    # Datasource upstreams
+    upstreams = jsonencode(var.datasource_upstreams)
   }
 }
 
@@ -50,9 +52,11 @@ data "template_file" "nomad_job_redash_worker" {
     # Postgres
     postgres_service = var.postgres_service.service
     postgres_port    = var.postgres_service.port
-    # Trino
-    trino_service = var.trino_service.service
-    trino_port    = var.trino_service.port
+    //    # Trino
+    //    trino_service = var.trino_service.service
+    //    trino_port    = var.trino_service.port
+    # Datasource upstreams
+    upstreams = jsonencode(var.datasource_upstreams)
   }
 }
 
@@ -76,9 +80,7 @@ data "template_file" "nomad_job_redash_scheduler" {
     # Postgres
     postgres_service = var.postgres_service.service
     postgres_port    = var.postgres_service.port
-    # Trino
-    trino_service = var.trino_service.service
-    trino_port    = var.trino_service.port
+
   }
 }
 
