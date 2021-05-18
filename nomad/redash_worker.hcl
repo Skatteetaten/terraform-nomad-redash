@@ -23,7 +23,7 @@ job "redash-worker" {
     }
 
     service {
-      name = "${service}-worker"
+      name = "${service_name}-worker"
       connect {
         sidecar_service {
           proxy {
@@ -35,6 +35,12 @@ job "redash-worker" {
               destination_name = "${postgres_service}"
               local_bind_port  = "${postgres_port}"
             }
+%{ for upstream in jsondecode(upstreams) }
+            upstreams {
+              destination_name = "${upstream.service_name}"
+              local_bind_port  = "${upstream.port}"
+            }
+%{ endfor }
           }
         }
         sidecar_task {

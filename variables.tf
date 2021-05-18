@@ -10,7 +10,7 @@ variable "nomad_namespace" {
   default     = "default"
 }
 # Redash
-variable "service" {
+variable "service_name" {
   type        = string
   description = "Redash service name"
   default     = "redash"
@@ -67,32 +67,47 @@ variable "use_canary" {
   default     = false
 }
 
+variable "redash_config_properties" {
+  type        = list(string)
+  description = "Custom redash configuration properties"
+  default = ["python /app/manage.py database create_tables",
+    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
+}
+
+
 # Redis
 variable "redis_service" {
   type = object({
-    service = string,
-    port    = number,
-    host    = string
+    service_name = string,
+    port         = number,
   })
   default = {
-    service = "redis",
-    port    = 6379
-    host    = "127.0.0.1"
+    service_name = "redash-redis",
+    port         = 6379
   }
-  description = "Redis data-object contains service, port and host"
+  description = "Redis data-object contains service_name and port."
 }
 
 # Postgres
 variable "postgres_service" {
   type = object({
-    service = string,
-    port    = number,
-    host    = string
+    service_name = string,
+    port         = number,
   })
   default = {
-    service = "postgres",
-    port    = 5432
-    host    = "127.0.0.1"
+    service_name = "redash-postgres",
+    port         = 5432
   }
-  description = "Postgres data-object contains service, port and host"
+  description = "Postgres data-object contains service and port."
+}
+
+# Datasources
+variable "datasource_upstreams" {
+  type = list(object({
+    service_name = string,
+    port         = number,
+  }))
+  description = "List of upstream services (list of object with service_name, port)"
+  default     = []
 }

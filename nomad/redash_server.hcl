@@ -25,7 +25,7 @@ job "redash-server" {
     }
 
     service {
-      name = "${service}-server"
+      name = "${service_name}-server"
       port = "${port}"
 //      check {
 //        expose    = true
@@ -46,6 +46,12 @@ job "redash-server" {
               destination_name = "${postgres_service}"
               local_bind_port  = "${postgres_port}"
             }
+%{ for upstream in jsondecode(upstreams) }
+            upstreams {
+              destination_name = "${upstream.service_name}"
+              local_bind_port  = "${upstream.port}"
+            }
+%{ endfor }
           }
         }
         sidecar_task {
@@ -64,7 +70,7 @@ job "redash-server" {
         command = "/bin/bash"
         args = [
           "-c",
-          "python /app/manage.py database create_tables && python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
+          "${redash_config_properties}"
         ]
       }
 
