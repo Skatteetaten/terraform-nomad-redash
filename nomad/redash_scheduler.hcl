@@ -1,4 +1,4 @@
-job "redash-scheduler" {
+job "${service_name}-scheduler" {
   type        = "service"
   datacenters = ["${datacenters}"]
   namespace   = "${namespace}"

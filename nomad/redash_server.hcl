@@ -1,4 +1,4 @@
-job "redash-server" {
+job "${service_name}-server" {
   type        = "service"
   datacenters = ["${datacenters}"]
   namespace   = "${namespace}"

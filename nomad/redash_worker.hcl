@@ -1,4 +1,4 @@
-job "redash-worker" {
+job "${service_name}-worker" {
   type        = "service"
   datacenters = ["${datacenters}"]
   namespace   = "${namespace}"
