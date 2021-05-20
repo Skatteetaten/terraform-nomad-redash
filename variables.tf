@@ -94,12 +94,35 @@ variable "postgres_service" {
   type = object({
     service_name = string,
     port         = number,
+    username = string,
+    password = string,
+    database_name = string
   })
   default = {
     service_name = "redash-postgres",
-    port         = 5432
+    port         = 5432,
+    username = "username",
+    password = "password",
+    database_name = "metastore"
   }
-  description = "Postgres data-object contains service and port."
+  description = "Postgres data-object contains service, port, username, password and database_name."
+}
+variable "postgres_vault_secret" {
+  type = object({
+    use_vault_provider      = bool,
+    vault_kv_policy_name    = string,
+    vault_kv_path           = string,
+    vault_kv_field_username = string,
+    vault_kv_field_password = string
+  })
+  description = "Set of properties to be able to fetch Postgres secrets from vault"
+  default = {
+    use_vault_provider      = false
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/data/dev/redash"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
+  }
 }
 
 # Datasources

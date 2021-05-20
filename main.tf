@@ -24,9 +24,16 @@ data "template_file" "nomad_job_redash_server" {
     # Postgres
     postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
-    //    # Trino
-    //    trino_service = var.trino_service.service
-    //    trino_port    = var.trino_service.port
+    postgres_username = var.postgres_service.username
+    postgres_password = var.postgres_service.password
+    postgres_database_name = var.postgres_service.database_name
+    # if creds ar provided by vault
+    postgres_use_vault_provider      = var.postgres_vault_secret.use_vault_provider
+    postgres_vault_kv_policy_name    = var.postgres_vault_secret.vault_kv_policy_name
+    postgres_vault_kv_path           = var.postgres_vault_secret.vault_kv_path
+    postgres_vault_kv_field_username = var.postgres_vault_secret.vault_kv_field_username
+    postgres_vault_kv_field_password = var.postgres_vault_secret.vault_kv_field_password
+
     # Datasource upstreams
     upstreams = jsonencode(var.datasource_upstreams)
   }
@@ -52,9 +59,15 @@ data "template_file" "nomad_job_redash_worker" {
     # Postgres
     postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
-    //    # Trino
-    //    trino_service = var.trino_service.service
-    //    trino_port    = var.trino_service.port
+    postgres_username = var.postgres_service.username
+    postgres_password = var.postgres_service.password
+    postgres_database_name = var.postgres_service.database_name
+    # if creds ar provided by vault
+    postgres_use_vault_provider      = var.postgres_vault_secret.use_vault_provider
+    postgres_vault_kv_policy_name    = var.postgres_vault_secret.vault_kv_policy_name
+    postgres_vault_kv_path           = var.postgres_vault_secret.vault_kv_path
+    postgres_vault_kv_field_username = var.postgres_vault_secret.vault_kv_field_username
+    postgres_vault_kv_field_password = var.postgres_vault_secret.vault_kv_field_password
     # Datasource upstreams
     upstreams = jsonencode(var.datasource_upstreams)
   }
@@ -80,6 +93,9 @@ data "template_file" "nomad_job_redash_scheduler" {
     # Postgres
     postgres_service = var.postgres_service.service_name
     postgres_port    = var.postgres_service.port
+    postgres_username = var.postgres_service.username
+    postgres_password = var.postgres_service.password
+    postgres_database_name = var.postgres_service.database_name
 
   }
 }
