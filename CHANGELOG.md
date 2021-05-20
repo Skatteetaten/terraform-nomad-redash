@@ -10,6 +10,7 @@
 - Added a new example/redash_trino_cluster #39
 - Added variable `redash_config_properties` for custom redash properties. This variable makes it possible to create a new data source dynamically. #39
 - Integration with Vault #35
+- Random env-vars
 
 
 ## [0.0.3]

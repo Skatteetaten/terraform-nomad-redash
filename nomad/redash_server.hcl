@@ -93,6 +93,14 @@ REDASH_ENFORCE_CSRF = "true"
 EOF
 }
 
+      template {
+        destination = "local/data/.additional-envs"
+        change_mode = "noop"
+        env         = true
+        data        = <<EOF
+${envs}
+EOF
+      }
       resources {
         cpu    = "${cpu}" # MHz
         memory = "${memory}" # MB

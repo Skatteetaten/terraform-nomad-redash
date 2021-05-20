@@ -1,6 +1,7 @@
 locals {
   datacenters              = join(",", var.nomad_datacenters)
   redash_config_properties = join(" ; ", var.redash_config_properties)
+  redash_env_vars = join("\n", var.container_environment_variables)
 }
 
 data "template_file" "nomad_job_redash_server" {
@@ -18,6 +19,7 @@ data "template_file" "nomad_job_redash_server" {
     memory_proxy             = var.resource_proxy.memory
     use_canary               = var.use_canary
     redash_config_properties = local.redash_config_properties
+    envs                     = local.redash_env_vars
     # Redis
     redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port

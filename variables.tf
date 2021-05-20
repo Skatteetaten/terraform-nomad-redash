@@ -134,3 +134,9 @@ variable "datasource_upstreams" {
   description = "List of upstream services (list of object with service_name, port)"
   default     = []
 }
+
+variable "container_environment_variables" {
+  type        = list(string)
+  description = "Redash environment variables"
+  default     = [""]
+}
