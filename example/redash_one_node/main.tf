@@ -1,10 +1,3 @@
-//locals {
-//  pg_datastore = jsonencode({
-//    dbname : module.redash-postgres.database_name
-//    password : module.redash-postgres.password
-//    user: module.redash-postgres.username
-//  })
-//}
 module "redash" {
   source = "../.."
   # nomad
