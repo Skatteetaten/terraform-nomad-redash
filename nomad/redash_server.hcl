@@ -1,4 +1,4 @@
-job "redash-server" {
+job "${service_name}-server" {
   type        = "service"
   datacenters = ["${datacenters}"]
   namespace   = "${namespace}"
@@ -25,7 +25,7 @@ job "redash-server" {
     }
 
     service {
-      name = "${service}-server"
+      name = "${service_name}-server"
       port = "${port}"
 //      check {
 //        expose    = true
@@ -46,6 +46,12 @@ job "redash-server" {
               destination_name = "${postgres_service}"
               local_bind_port  = "${postgres_port}"
             }
+%{ for upstream in jsondecode(upstreams) }
+            upstreams {
+              destination_name = "${upstream.service_name}"
+              local_bind_port  = "${upstream.port}"
+            }
+%{ endfor }
           }
         }
         sidecar_task {
@@ -64,21 +70,37 @@ job "redash-server" {
         command = "/bin/bash"
         args = [
           "-c",
-          "python /app/manage.py database create_tables && python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default && /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
+          "${redash_config_properties}"
         ]
       }
 
-      env {
-        PYTHONUNBUFFERED = 0
-        REDASH_LOG_LEVEL = "INFO"
-        REDASH_REDIS_URL = "redis://$${NOMAD_UPSTREAM_ADDR_${redis_service}}/0"
-        REDASH_DATABASE_URL        = "postgresql://postgres:postgres@$${NOMAD_UPSTREAM_ADDR_${postgres_service}}/postgres" // TODO! Fetch credentials from Vault
-        REDASH_RATELIMIT_ENABLED = "false"
-//        REDASH_MAIL_DEFAULT_SENDER = "redash@example.com"
-//        REDASH_MAIL_SERVER = "email"
-        REDASH_ENFORCE_CSRF = "true"
-      }
+      template {
+        destination = ".env"
+        env = true
+        data = <<EOF
+PYTHONUNBUFFERED = 0
+REDASH_LOG_LEVEL = "INFO"
+REDASH_REDIS_URL = "redis://{{ env "NOMAD_UPSTREAM_ADDR_${redis_service}" }}/0"
+%{ if postgres_use_vault_provider }
+{{ with secret "${postgres_vault_kv_path}" }}
+REDASH_DATABASE_URL = "postgresql://"{{ .Data.data.${postgres_vault_kv_field_username} }}":"{{ .Data.data.${postgres_vault_kv_field_password} }}"@{{ env "NOMAD_UPSTREAM_ADDR_${postgres_service}" }}/${postgres_database_name}"
+{{ end }}
+%{ else }
+REDASH_DATABASE_URL = "postgresql://${postgres_username}:${postgres_password}@{{ env "NOMAD_UPSTREAM_ADDR_${postgres_service}" }}/${postgres_database_name}"
+%{ endif }
+REDASH_RATELIMIT_ENABLED = "false"
+REDASH_ENFORCE_CSRF = "true"
+EOF
+}
 
+      template {
+        destination = "local/data/.additional-envs"
+        change_mode = "noop"
+        env         = true
+        data        = <<EOF
+${envs}
+EOF
+      }
       resources {
         cpu    = "${cpu}" # MHz
         memory = "${memory}" # MB

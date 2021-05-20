@@ -10,7 +10,7 @@ variable "nomad_namespace" {
   default     = "default"
 }
 # Redash
-variable "service" {
+variable "service_name" {
   type        = string
   description = "Redash service name"
   default     = "redash"
@@ -67,32 +67,76 @@ variable "use_canary" {
   default     = false
 }
 
+variable "redash_config_properties" {
+  type        = list(string)
+  description = "Custom redash configuration properties"
+  default = ["python /app/manage.py database create_tables",
+    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
+}
+
+
 # Redis
 variable "redis_service" {
   type = object({
-    service = string,
-    port    = number,
-    host    = string
+    service_name = string,
+    port         = number,
   })
   default = {
-    service = "redis",
-    port    = 6379
-    host    = "127.0.0.1"
+    service_name = "redash-redis",
+    port         = 6379
   }
-  description = "Redis data-object contains service, port and host"
+  description = "Redis data-object contains service_name and port."
 }
 
 # Postgres
 variable "postgres_service" {
   type = object({
-    service = string,
-    port    = number,
-    host    = string
+    service_name = string,
+    port         = number,
+    username = string,
+    password = string,
+    database_name = string
   })
   default = {
-    service = "postgres",
-    port    = 5432
-    host    = "127.0.0.1"
+    service_name = "redash-postgres",
+    port         = 5432,
+    username = "username",
+    password = "password",
+    database_name = "metastore"
   }
-  description = "Postgres data-object contains service, port and host"
+  description = "Postgres data-object contains service, port, username, password and database_name."
+}
+variable "postgres_vault_secret" {
+  type = object({
+    use_vault_provider      = bool,
+    vault_kv_policy_name    = string,
+    vault_kv_path           = string,
+    vault_kv_field_username = string,
+    vault_kv_field_password = string
+  })
+  description = "Set of properties to be able to fetch Postgres secrets from vault"
+  default = {
+    use_vault_provider      = false
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/data/dev/redash"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
+  }
+}
+
+# Datasources
+variable "datasource_upstreams" {
+  type = list(object({
+    service_name = string,
+    port         = number,
+  }))
+  description = "List of upstream services (list of object with service_name, port)"
+  default     = []
+}
+
+variable "container_environment_variables" {
+  type        = list(string)
+  description = "Redash environment variables"
+  default     = [""]
 }

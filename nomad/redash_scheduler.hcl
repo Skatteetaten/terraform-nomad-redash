@@ -1,4 +1,4 @@
-job "redash-scheduler" {
+job "${service_name}-scheduler" {
   type        = "service"
   datacenters = ["${datacenters}"]
   namespace   = "${namespace}"
@@ -25,7 +25,7 @@ job "redash-scheduler" {
     }
 
     service {
-      name = "${service}-scheduler"
+      name = "${service_name}-scheduler"
       connect {
         sidecar_service {
           proxy {
