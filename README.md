@@ -69,6 +69,21 @@ module "redash" {
   host            = "127.0.0.1"
   port            = 5000
   container_image = "redash/redash:9.0.0-beta.b42121"
+
+  postgres_service = {
+    service_name  = module.redash-postgres.service_name
+    port          = module.redash-postgres.port
+    username      = module.redash-postgres.username
+    password      = module.redash-postgres.password
+    database_name = module.redash-postgres.database_name
+  }
+  postgres_vault_secret = {
+    use_vault_provider      = true
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/dev/postgres"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
+  }
 }
 
 module "redis" {
@@ -97,14 +112,12 @@ module "postgres" {
   container_image = "postgres:12-alpine"
   container_port  = 5432
   vault_secret = {
-    use_vault_provider      = false,
-    vault_kv_policy_name    = "",
-    vault_kv_path           = "",
-    vault_kv_field_username = "",
-    vault_kv_field_password = ""
+    use_vault_provider      = false
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/data/dev/postgres"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
   }
-  admin_user                      = "postgres"
-  admin_password                  = "postgres"
   database                        = "metastore"
   volume_destination              = "/var/lib/postgresql/data"
   use_host_volume                 = false
@@ -115,15 +128,19 @@ module "postgres" {
 |------|-------------|------|---------|:--------:|
 | nomad\_datacenters | Nomad data centers | list(string) | ["dc1"] | yes |
 | nomad\_namespace | [Enterprise] Nomad namespace | string | "default" | yes |
-| service | Redash service name | string | "redash" | yes |
+| service_name | Redash service name | string | "redash" | yes |
 | host | Redash host | string | "127.0.0.1" | yes |
 | port | Redash container port | number | 5000 | yes |
 | container\_image | Redash container image | string | "redash/redash:9.0.0-beta.b42121" | yes |
 | resource | Resource allocations for cpu and memory | obj(number, number)| { <br> cpu = 200, <br> memory = 1024 <br> } | no |
 | resource_proxy | Resource allocations for proxy | obj(number, number)| { <br> cpu = 200, <br> memory = 128 <br> } | no |
 | use\_canary | Uses canary deployment for Redash | bool | false | no |
-| redis\_service | Redis data-object contains service, port and host | obj(string, number, string) | { <br> service = "redis", <br> port = 6379, <br> host = "127.0.0.1" <br> } | no |
-| postgres\_service | Postgres data-object contains service, port and host | obj(string, number, string) | { <br> service = "postgres", <br> port = 5432, <br> host = "127.0.0.1" <br> } | no |
+| redash\_config\_properties | Custom redash configuration properties | list(string) | [<br> "python /app/manage.py database create_tables", <br> "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default", <br> "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" <br> ] | no |
+| container\_environment\_variables | Redash environment variables | list(string) | [" "] | no |
+| redis\_service | Redis data-object contains service_name and port. | obj(string, string) | { <br> service = "redash-redis", <br> port = 6379, <br> host = "127.0.0.1" <br> } | no |
+| postgres\_service | Postgres data-object contains service, port, username, password and database name | obj(string, number, string, string, string) | { <br> service = "redash-postgres", <br> port = 5432, <br> username = "username", <br> password = "password",  <br> database_name = "metastore" } | no |
+| postgres_vault_secret | Set of properties to be able to fetch Postgres secrets from vault | obj(bool, string, string, string, string) | { <br> use_vault_provider = false, <br> vault_kv_policy_name = "kv-secret", <br> vault_kv_path = "secret/data/dev/trino", <br> vault_kv_field_username = "username", <br> vault_kv_field_password = "username" <br> } | no |
+| datasource\_upstreams | List of upstream services (list of object with service_name, port) | list | false | no |
 
 ## Outputs
 | Name | Description | Type |
