@@ -92,17 +92,17 @@ variable "redis_service" {
 # Postgres
 variable "postgres_service" {
   type = object({
-    service_name = string,
-    port         = number,
-    username = string,
-    password = string,
+    service_name  = string,
+    port          = number,
+    username      = string,
+    password      = string,
     database_name = string
   })
   default = {
-    service_name = "redash-postgres",
-    port         = 5432,
-    username = "username",
-    password = "password",
+    service_name  = "redash-postgres",
+    port          = 5432,
+    username      = "username",
+    password      = "password",
     database_name = "metastore"
   }
   description = "Postgres data-object contains service, port, username, password and database_name."

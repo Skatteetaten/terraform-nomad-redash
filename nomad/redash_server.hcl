@@ -22,19 +22,15 @@ job "${service_name}-server" {
 
     network {
       mode = "bridge"
+      port "expose_check" {
+        to = -1
+      }
     }
 
     service {
       name = "${service_name}-server"
       port = "${port}"
-//      check {
-//        expose    = true
-//        name      = "redash-server-live"
-//        type      = "http"
-//        path      = "/ping"
-//        interval  = "10s"
-//        timeout   = "2s"
-//      }
+
       connect {
         sidecar_service {
           proxy {
@@ -52,6 +48,14 @@ job "${service_name}-server" {
               local_bind_port  = "${upstream.port}"
             }
 %{ endfor }
+            expose {
+              path {
+                path            = "/ping"
+                protocol        = "http"
+                local_path_port = ${port}
+                listener_port   = "expose_check"
+              }
+            }
           }
         }
         sidecar_task {
