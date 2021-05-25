@@ -37,7 +37,7 @@ All software is provided and run with docker. See the [Makefile](Makefile) for i
 ## Usage
 The following command will run Redash in the [example/redash_one_node](example/redash_one_node) folder.
 ```sh
-make up 
+make up-redash-one-node
 ```
 
 ### Verifying setup
@@ -140,7 +140,7 @@ module "postgres" {
 | redis\_service | Redis data-object contains service_name and port. | obj(string, string) | { <br> service = "redash-redis", <br> port = 6379, <br> host = "127.0.0.1" <br> } | no |
 | postgres\_service | Postgres data-object contains service, port, username, password and database name | obj(string, number, string, string, string) | { <br> service = "redash-postgres", <br> port = 5432, <br> username = "username", <br> password = "password",  <br> database_name = "metastore" } | no |
 | postgres_vault_secret | Set of properties to be able to fetch Postgres secrets from vault | obj(bool, string, string, string, string) | { <br> use_vault_provider = false, <br> vault_kv_policy_name = "kv-secret", <br> vault_kv_path = "secret/data/dev/trino", <br> vault_kv_field_username = "username", <br> vault_kv_field_password = "username" <br> } | no |
-| datasource\_upstreams | List of upstream services (list of object with service_name, port) | list | false | no |
+| datasource\_upstreams | List of upstream services (list of object with service_name, port) | list | [" "] | no |
 
 ## Outputs
 | Name | Description | Type |
