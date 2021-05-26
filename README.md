@@ -114,7 +114,7 @@ module "postgres" {
   vault_secret = {
     use_vault_provider      = false
     vault_kv_policy_name    = "kv-secret"
-    vault_kv_path           = "secret/data/dev/postgres"
+    vault_kv_path           = "secret/dev/postgres"
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
   }
