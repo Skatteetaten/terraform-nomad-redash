@@ -33,8 +33,11 @@ module "redash" {
   }
   # Redash postgres
   postgres_service = {
-    service_name = module.redash-postgres.service_name
-    port         = module.redash-postgres.port
+    service_name  = module.redash-postgres.service_name
+    port          = module.redash-postgres.port
+    username      = module.redash-postgres.username
+    password      = module.redash-postgres.password
+    database_name = module.redash-postgres.database_name
   }
 
   # Datasource upstream
