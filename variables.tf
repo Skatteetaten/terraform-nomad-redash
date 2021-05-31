@@ -75,6 +75,12 @@ variable "redash_config_properties" {
   "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
 }
 
+variable "container_environment_variables" {
+  type        = list(string)
+  description = "Redash environment variables"
+  default     = [""]
+}
+
 
 # Redis
 variable "redis_service" {
@@ -92,17 +98,17 @@ variable "redis_service" {
 # Postgres
 variable "postgres_service" {
   type = object({
-    service_name = string,
-    port         = number,
-    username = string,
-    password = string,
+    service_name  = string,
+    port          = number,
+    username      = string,
+    password      = string,
     database_name = string
   })
   default = {
-    service_name = "redash-postgres",
-    port         = 5432,
-    username = "username",
-    password = "password",
+    service_name  = "redash-postgres",
+    port          = 5432,
+    username      = "username",
+    password      = "password",
     database_name = "metastore"
   }
   description = "Postgres data-object contains service, port, username, password and database_name."
@@ -119,7 +125,7 @@ variable "postgres_vault_secret" {
   default = {
     use_vault_provider      = false
     vault_kv_policy_name    = "kv-secret"
-    vault_kv_path           = "secret/data/dev/redash"
+    vault_kv_path           = "secret/data/dev/postgres"
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
   }
@@ -135,8 +141,3 @@ variable "datasource_upstreams" {
   default     = []
 }
 
-variable "container_environment_variables" {
-  type        = list(string)
-  description = "Redash environment variables"
-  default     = [""]
-}

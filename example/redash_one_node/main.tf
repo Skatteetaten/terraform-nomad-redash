@@ -13,7 +13,7 @@ module "redash" {
 
   redash_config_properties = ["python /app/manage.py database create_tables",
     "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-    "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
+  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
 
   postgres_service = {
     service_name  = module.redash-postgres.service_name

@@ -1,7 +1,7 @@
 locals {
   datacenters              = join(",", var.nomad_datacenters)
   redash_config_properties = join(" ; ", var.redash_config_properties)
-  redash_env_vars = join("\n", var.container_environment_variables)
+  redash_env_vars          = join("\n", var.container_environment_variables)
 }
 
 data "template_file" "nomad_job_redash_server" {
@@ -24,10 +24,10 @@ data "template_file" "nomad_job_redash_server" {
     redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service_name
-    postgres_port    = var.postgres_service.port
-    postgres_username = var.postgres_service.username
-    postgres_password = var.postgres_service.password
+    postgres_service       = var.postgres_service.service_name
+    postgres_port          = var.postgres_service.port
+    postgres_username      = var.postgres_service.username
+    postgres_password      = var.postgres_service.password
     postgres_database_name = var.postgres_service.database_name
     # if creds ar provided by vault
     postgres_use_vault_provider      = var.postgres_vault_secret.use_vault_provider
@@ -59,10 +59,10 @@ data "template_file" "nomad_job_redash_worker" {
     redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service_name
-    postgres_port    = var.postgres_service.port
-    postgres_username = var.postgres_service.username
-    postgres_password = var.postgres_service.password
+    postgres_service       = var.postgres_service.service_name
+    postgres_port          = var.postgres_service.port
+    postgres_username      = var.postgres_service.username
+    postgres_password      = var.postgres_service.password
     postgres_database_name = var.postgres_service.database_name
     # if creds ar provided by vault
     postgres_use_vault_provider      = var.postgres_vault_secret.use_vault_provider
@@ -93,10 +93,10 @@ data "template_file" "nomad_job_redash_scheduler" {
     redis_service = var.redis_service.service_name
     redis_port    = var.redis_service.port
     # Postgres
-    postgres_service = var.postgres_service.service_name
-    postgres_port    = var.postgres_service.port
-    postgres_username = var.postgres_service.username
-    postgres_password = var.postgres_service.password
+    postgres_service       = var.postgres_service.service_name
+    postgres_port          = var.postgres_service.port
+    postgres_username      = var.postgres_service.username
+    postgres_password      = var.postgres_service.password
     postgres_database_name = var.postgres_service.database_name
 
   }

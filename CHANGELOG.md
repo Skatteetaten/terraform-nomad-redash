@@ -2,6 +2,8 @@
 
 ## [0.1.0 UNRELEASED]
 ### Updated
+- Documentation for example/redash_trino_cluster #40
+- Documentation for example/redash_one_node #38
 - Bump vagrant-hashistack ">= 0.10, < 0.11". #32
 - Removed unused files/folders and updated the folder structure. #32
 - Updated example/redash_one_node with upstream to postgres and redis, and dynamical variables. #34
@@ -10,7 +12,8 @@
 - Added a new example/redash_trino_cluster #39
 - Added variable `redash_config_properties` for custom redash properties. This variable makes it possible to create a new data source dynamically. #39
 - Integration with Vault #35
-- Random env-vars
+- Random env-vars #43
+- Added health checks for redash-server #36
 
 
 ## [0.0.3]

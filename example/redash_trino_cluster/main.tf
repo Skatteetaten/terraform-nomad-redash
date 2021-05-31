@@ -19,6 +19,8 @@ module "redash" {
   port            = 5000
   container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:latest"
   use_canary      = false
+
+  # Customized redash configuration
   redash_config_properties = ["python /app/manage.py database create_tables",
     "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
     format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
@@ -31,8 +33,11 @@ module "redash" {
   }
   # Redash postgres
   postgres_service = {
-    service_name = module.redash-postgres.service_name
-    port         = module.redash-postgres.port
+    service_name  = module.redash-postgres.service_name
+    port          = module.redash-postgres.port
+    username      = module.redash-postgres.username
+    password      = module.redash-postgres.password
+    database_name = module.redash-postgres.database_name
   }
 
   # Datasource upstream
@@ -192,7 +197,7 @@ module "minio" {
 }
 
 module "postgres" {
-  source = "github.com/skatteetaten/terraform-nomad-postgres.git?ref=0.4.0"
+  source = "github.com/skatteetaten/terraform-nomad-postgres.git?ref=0.4.1"
 
   # nomad
   nomad_datacenters = local.nomad_datacenters
