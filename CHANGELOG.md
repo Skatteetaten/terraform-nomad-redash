@@ -1,6 +1,13 @@
 # Changelog
+## [1.0.1 UNRELEASED]
 
-## [0.1.0 UNRELEASED]
+### Updated
+
+### Added
+
+### Deleted
+
+## [1.0.0]
 ### Updated
 - Documentation for example/redash_trino_cluster #40
 - Documentation for example/redash_one_node #38
