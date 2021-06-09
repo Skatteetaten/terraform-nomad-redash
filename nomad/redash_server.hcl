@@ -102,9 +102,15 @@ EOF
         change_mode = "noop"
         env         = true
         data        = <<EOF
+%{ if ldap_use_vault_provider }
+{{ with secret "${ldap_vault_kv_path}" }}
+REDASH_LDAP_BIND_DN="{{ .Data.data.${ldap_vault_kv_field_username} }}"
+REDASH_LDAP_BIND_DN_PASSWORD="{{ .Data.data.${ldap_vault_kv_field_password} }}"
+{{ end }}
+%{ endif }
 ${envs}
 EOF
-      }
+}
       resources {
         cpu    = "${cpu}" # MHz
         memory = "${memory}" # MB
