@@ -139,7 +139,7 @@ variable "ldap_vault_secret" {
     vault_kv_field_username = string,
     vault_kv_field_password = string
   })
-  description = "Set of properties to be able to fetch Ldap secrets from vault"
+  description = "Set of properties to be able to fetch ldap secrets from Vault"
   default = {
     use_vault_provider      = false
     vault_kv_policy_name    = "kv-secret"
