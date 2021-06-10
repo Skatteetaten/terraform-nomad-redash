@@ -8,7 +8,7 @@ module "redash" {
   service_name    = "redash"
   host            = "127.0.0.1"
   port            = 5000
-  container_image = "redash/redash:8.0.2.b37747"
+  container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:ptmin-1394-create-datasources"
   use_canary      = false
 
   redash_config_properties = ["python /app/manage.py database create_tables",
@@ -29,6 +29,22 @@ module "redash" {
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
   }
+  ldap_vault_secret = {
+    use_vault_provider      = true
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/dev/ldap"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
+  }
+  container_environment_variables = [
+    "REDASH_LDAP_CUSTOM_USERNAME_PROMPT=Brukerid",
+    "REDASH_LDAP_LOGIN_ENABLED=true",
+    "REDASH_PASSWORD_LOGIN_ENABLED=true",
+    "REDASH_LDAP_URL=ldaps://skead.no:636",
+    "REDASH_LDAP_SEARCH_DN='DC=skead,DC=no'",
+    "REDASH_LDAP_SEARCH_TEMPLATE=(&(objectClass=user)(sAMAccountName=%(username)s)(memberof=CN=APP_datainn_utv,OU=Prosjekter,OU=vRAutomation,OU=Produksjon,OU=Applikasjoner,OU=Grupper,DC=skead,DC=no))"
+  ]
+
 }
 
 
