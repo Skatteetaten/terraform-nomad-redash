@@ -5,6 +5,7 @@
 
 ### Added
 - Fetch ldap secrets from Vault #50
+- Used `create_datasource.py` (function in redash image = `gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:ptmin-1394-create-datasources` ) to prevent duplicate data sources #51
 
 ### Deleted
 
