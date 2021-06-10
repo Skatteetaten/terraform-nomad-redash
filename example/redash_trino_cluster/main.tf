@@ -17,13 +17,13 @@ module "redash" {
   service_name    = "redash"
   host            = "127.0.0.1"
   port            = 5000
-  container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:latest"
+  container_image = "gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:ptmin-1394-create-datasources"
   use_canary      = false
 
   # Customized redash configuration
   redash_config_properties = ["python /app/manage.py database create_tables",
     "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-    format("python /app/manage.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
+    format("python create_datasource.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
   "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
 
   # Redash redis
@@ -39,7 +39,21 @@ module "redash" {
     password      = module.redash-postgres.password
     database_name = module.redash-postgres.database_name
   }
-
+  ldap_vault_secret = {
+    use_vault_provider      = true
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/dev/ldap"
+    vault_kv_field_username = "username"
+    vault_kv_field_password = "password"
+  }
+  container_environment_variables = [
+    "REDASH_LDAP_CUSTOM_USERNAME_PROMPT=Brukerid",
+    "REDASH_LDAP_LOGIN_ENABLED=true",
+    "REDASH_PASSWORD_LOGIN_ENABLED=true",
+    "REDASH_LDAP_URL=ldaps://skead.no:636",
+    "REDASH_LDAP_SEARCH_DN='DC=skead,DC=no'",
+    "REDASH_LDAP_SEARCH_TEMPLATE=(&(objectClass=user)(sAMAccountName=%(username)s)(memberof=CN=APP_datainn_utv,OU=Prosjekter,OU=vRAutomation,OU=Produksjon,OU=Applikasjoner,OU=Grupper,DC=skead,DC=no))"
+  ]
   # Datasource upstream
   datasource_upstreams = [{ service_name = module.trino.trino_service_name, port = 8080 }]
 }
@@ -52,7 +66,7 @@ module "redash-redis" {
   service_name    = "redash-redis"
   host            = "127.0.0.1"
   port            = 6379
-  container_image = "redis:3-alpine"
+  container_image = "gitlab-container-registry.minerva.loc/datainn/terraform-nomad-redis/redis:3-alpine"
   use_canary      = false
   resource_proxy = {
     cpu    = 200
@@ -67,7 +81,7 @@ module "redash-postgres" {
 
   # postgres
   service_name    = "redash-postgres"
-  container_image = "postgres:12-alpine"
+  container_image = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/postgres:13-alpine"
   container_port  = 5432
   vault_secret = {
     use_vault_provider      = false,
@@ -105,6 +119,7 @@ module "trino" {
     vault_kv_path              = "secret/data/dev/trino"
     vault_kv_field_secret_name = "cluster_shared_secret"
   }
+  consul_docker_image = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/trinodb/trino:353"
   service_name     = "trino"
   mode             = "standalone"
   workers          = 1
@@ -175,7 +190,7 @@ module "minio" {
   service_name    = "minio"
   host            = "127.0.0.1"
   port            = 9000
-  container_image = "minio/minio:latest" # todo: avoid using tag latest in future releases
+  container_image = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/minio/minio:latest" # todo: avoid using tag latest in future releases
   vault_secret = {
     use_vault_provider        = false,
     vault_kv_policy_name      = "",
@@ -206,7 +221,7 @@ module "postgres" {
 
   # postgres
   service_name    = "postgres"
-  container_image = "postgres:12-alpine"
+  container_image = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/postgres:13-alpine"
   container_port  = 5432
   vault_secret = {
     use_vault_provider      = false,
@@ -236,7 +251,7 @@ module "hive" {
   use_canary          = true
   hive_service_name   = "hive-metastore"
   hive_container_port = 9083
-  hive_docker_image   = "fredrikhgrelland/hive:3.1.0"
+  hive_docker_image   = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/hive:latest"
   resource = {
     cpu    = 500,
     memory = 1024
