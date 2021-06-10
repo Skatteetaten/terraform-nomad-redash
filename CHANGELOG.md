@@ -4,6 +4,7 @@
 ### Updated
 
 ### Added
+- Fetch ldap secrets from Vault #50
 
 ### Deleted
 
