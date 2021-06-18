@@ -135,12 +135,13 @@ module "postgres" {
 | resource | Resource allocations for cpu and memory | obj(number, number)| { <br> cpu = 200, <br> memory = 1024 <br> } | no |
 | resource_proxy | Resource allocations for proxy | obj(number, number)| { <br> cpu = 200, <br> memory = 128 <br> } | no |
 | use\_canary | Uses canary deployment for Redash | bool | false | no |
-| redash\_config\_properties | Custom redash configuration properties | list(string) | [<br> "python /app/manage.py database create_tables", <br> "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default", <br> "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100" <br> ] | no |
+| redash\_config\_properties | Custom redash configuration properties | list(string) | [" "] | no |
 | container\_environment\_variables | Redash environment variables | list(string) | [" "] | no |
 | redis\_service | Redis data-object contains service_name and port. | obj(string, string) | { <br> service = "redash-redis", <br> port = 6379, <br> host = "127.0.0.1" <br> } | no |
 | postgres\_service | Postgres data-object contains service, port, username, password and database name | obj(string, number, string, string, string) | { <br> service = "redash-postgres", <br> port = 5432, <br> username = "username", <br> password = "password",  <br> database_name = "metastore" } | no |
 | postgres_vault_secret | Set of properties to be able to fetch postgres secrets from vault | obj(bool, string, string, string, string) | { <br> use_vault_provider = false, <br> vault_kv_policy_name = "kv-secret", <br> vault_kv_path = "secret/data/dev/trino", <br> vault_kv_field_username = "username", <br> vault_kv_field_password = "password" <br> } | no |
 | ldap_vault_secret | Set of properties to be able to fetch ldap secrets from vault | obj(bool, string, string, string, string) | { <br> use_vault_provider = false, <br> vault_kv_policy_name = "kv-secret", <br> vault_kv_path = "secret/data/dev/ldap", <br> vault_kv_field_username = "username", <br> vault_kv_field_password = "password" <br> } | no |
+| redash_admin_vault_secret | Set of properties to be able to fetch redash admin (root-user) secrets from vault | obj(bool, string, string, string, string) | { <br> use_vault_provider = false, <br> vault_kv_policy_name = "kv-secret", <br> vault_kv_path = "secret/data/dev/redash", <br> vault_kv_field_username = "admin_user", <br> vault_kv_field_password = "admin_password" <br> } | no |
 | datasource\_upstreams | List of upstream services (list of object with service_name, port) | list | [" "] | no |
 
 ## Outputs
