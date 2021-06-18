@@ -6,7 +6,8 @@
 ### Added
 - Fetch ldap secrets from Vault #50
 - Used `create_datasource.py` (function in redash image = `gitlab-container-registry.minerva.loc/datainn/redash-rabbit-edition:ptmin-1394-create-datasources` ) to prevent duplicate data sources in example/redash_trino_cluster #51
-- Vault integration: admin and admin-password (root-user) redash-server
+- Vault integration: admin and admin-password (root-user) redash-server #52
+- Moved all secrets to /secrets/.env #55
 
 ### Deleted
 
