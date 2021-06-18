@@ -1,7 +1,7 @@
 locals {
   datacenters              = join(",", var.nomad_datacenters)
-  redash_config_properties = join(" ; ", var.redash_config_properties)
   redash_env_vars          = join("\n", var.container_environment_variables)
+  redash_config_properties = length(var.redash_config_properties) == 1 ? join(" ; ", concat(var.redash_config_properties, [""])) : join(" ; ", var.redash_config_properties)
 }
 
 data "template_file" "nomad_job_redash_server" {
@@ -42,6 +42,13 @@ data "template_file" "nomad_job_redash_server" {
     ldap_vault_kv_path           = var.ldap_vault_secret.vault_kv_path
     ldap_vault_kv_field_username = var.ldap_vault_secret.vault_kv_field_username
     ldap_vault_kv_field_password = var.ldap_vault_secret.vault_kv_field_password
+
+    # if creds for redash are provided by vault
+    redash_use_vault_provider      = var.redash_vault_secret.use_vault_provider
+    redash_vault_kv_policy_name    = var.redash_vault_secret.vault_kv_policy_name
+    redash_vault_kv_path           = var.redash_vault_secret.vault_kv_path
+    redash_vault_kv_field_username = var.redash_vault_secret.vault_kv_field_username
+    redash_vault_kv_field_password = var.redash_vault_secret.vault_kv_field_password
 
     # Datasource upstreams
     upstreams = jsonencode(var.datasource_upstreams)

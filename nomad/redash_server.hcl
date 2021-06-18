@@ -72,12 +72,18 @@ job "${service_name}-server" {
       config {
         image = "${image}"
         command = "/bin/bash"
+%{ if redash_use_vault_provider }
         args = [
           "-c",
-          "${redash_config_properties}"
+          "python /app/manage.py database create_tables ; python /app/manage.py users create_root $ADMIN_USER admin --password $ADMIN_PASSWORD --org default ; ${redash_config_properties} /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
         ]
+%{ else }
+        args = [
+          "-c",
+          "python /app/manage.py database create_tables ; python /app/manage.py users create_root admin@mail.com admin --password admin123 --org default ; ${redash_config_properties} /usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"
+        ]
+%{ endif }
       }
-
       template {
         destination = ".env"
         env = true
@@ -106,6 +112,12 @@ EOF
 {{ with secret "${ldap_vault_kv_path}" }}
 REDASH_LDAP_BIND_DN="{{ .Data.data.${ldap_vault_kv_field_username} }}"
 REDASH_LDAP_BIND_DN_PASSWORD="{{ .Data.data.${ldap_vault_kv_field_password} }}"
+{{ end }}
+%{ endif }
+%{ if redash_use_vault_provider }
+{{ with secret "${redash_vault_kv_path}" }}
+ADMIN_USER="{{ .Data.data.${redash_vault_kv_field_username} }}"
+ADMIN_PASSWORD="{{ .Data.data.${redash_vault_kv_field_password} }}"
 {{ end }}
 %{ endif }
 ${envs}
