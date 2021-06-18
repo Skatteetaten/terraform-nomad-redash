@@ -21,11 +21,9 @@ module "redash" {
   use_canary      = false
 
   # Customized redash configuration
-  redash_config_properties = ["python /app/manage.py database create_tables",
-    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+  redash_config_properties = [
     format("python create_datasource.py ds new \\\"trino\\\" --type \\\"trino\\\" --options '%s' --org default", trimsuffix(trimprefix(jsonencode(local.trino_datastore), "\""), "\"")),
-  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
-
+  ]
   # Redash redis
   redis_service = {
     service_name = module.redash-redis.redis_service
@@ -46,6 +44,13 @@ module "redash" {
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
   }
+  redash_admin_vault_secret = {
+    use_vault_provider      = true
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/dev/redash"
+    vault_kv_field_username = "admin_user"
+    vault_kv_field_password = "admin_password"
+  }
   container_environment_variables = [
     "REDASH_LDAP_CUSTOM_USERNAME_PROMPT=Brukerid",
     "REDASH_LDAP_LOGIN_ENABLED=true",
@@ -56,6 +61,10 @@ module "redash" {
   ]
   # Datasource upstream
   datasource_upstreams = [{ service_name = module.trino.trino_service_name, port = 8080 }]
+  resource_proxy = {
+    cpu    = 202
+    memory = 128
+  }
 }
 
 
@@ -120,12 +129,12 @@ module "trino" {
     vault_kv_field_secret_name = "cluster_shared_secret"
   }
   consul_docker_image = "gitlab-container-registry.minerva.loc/plattform/koin/container-registry/trinodb/trino:353"
-  service_name     = "trino"
-  mode             = "standalone"
-  workers          = 1
-  consul_http_addr = "http://10.0.3.10:8500"
-  debug            = true
-  use_canary       = true
+  service_name        = "trino"
+  mode                = "standalone"
+  workers             = 1
+  consul_http_addr    = "http://10.0.3.10:8500"
+  debug               = true
+  use_canary          = true
   hive_config_properties = [
     "hive.allow-drop-table=true",
     "hive.allow-rename-table=true",

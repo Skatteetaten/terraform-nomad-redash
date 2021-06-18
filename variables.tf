@@ -70,9 +70,10 @@ variable "use_canary" {
 variable "redash_config_properties" {
   type        = list(string)
   description = "Custom redash configuration properties"
-  default = ["python /app/manage.py database create_tables",
-    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
-  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
+  default     = []
+  //  default = ["python /app/manage.py database create_tables",
+  //    "python /app/manage.py users create_root admin@mail.com admin123 --password admin --org default",
+  //  "/usr/local/bin/gunicorn -b 0.0.0.0:5000 --name redash -w4 redash.wsgi:app --max-requests 1000 --max-requests-jitter 100"]
 }
 
 variable "container_environment_variables" {
@@ -146,6 +147,24 @@ variable "ldap_vault_secret" {
     vault_kv_path           = "secret/data/dev/ldap"
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
+  }
+}
+
+variable "redash_admin_vault_secret" {
+  type = object({
+    use_vault_provider      = bool,
+    vault_kv_policy_name    = string,
+    vault_kv_path           = string,
+    vault_kv_field_username = string,
+    vault_kv_field_password = string
+  })
+  description = "Set of properties to be able to fetch redash secrets from Vault"
+  default = {
+    use_vault_provider      = false
+    vault_kv_policy_name    = "kv-secret"
+    vault_kv_path           = "secret/data/dev/redash"
+    vault_kv_field_username = "admin_user"
+    vault_kv_field_password = "admin_password"
   }
 }
 
