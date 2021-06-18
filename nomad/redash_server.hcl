@@ -85,7 +85,7 @@ job "${service_name}-server" {
 %{ endif }
       }
       template {
-        destination = ".env"
+        destination = "secrets/.env"
         env = true
         data = <<EOF
 PYTHONUNBUFFERED = 0
@@ -100,14 +100,6 @@ REDASH_DATABASE_URL = "postgresql://${postgres_username}:${postgres_password}@{{
 %{ endif }
 REDASH_RATELIMIT_ENABLED = "false"
 REDASH_ENFORCE_CSRF = "true"
-EOF
-}
-
-      template {
-        destination = "local/data/.additional-envs"
-        change_mode = "noop"
-        env         = true
-        data        = <<EOF
 %{ if ldap_use_vault_provider }
 {{ with secret "${ldap_vault_kv_path}" }}
 REDASH_LDAP_BIND_DN="{{ .Data.data.${ldap_vault_kv_field_username} }}"
@@ -120,6 +112,14 @@ ADMIN_USER="{{ .Data.data.${redash_admin_vault_kv_field_username} }}"
 ADMIN_PASSWORD="{{ .Data.data.${redash_admin_vault_kv_field_password} }}"
 {{ end }}
 %{ endif }
+EOF
+}
+
+      template {
+        destination = "local/data/.additional-envs"
+        change_mode = "noop"
+        env         = true
+        data        = <<EOF
 ${envs}
 EOF
 }
