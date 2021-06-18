@@ -150,7 +150,7 @@ variable "ldap_vault_secret" {
   }
 }
 
-variable "redash_vault_secret" {
+variable "redash_admin_vault_secret" {
   type = object({
     use_vault_provider      = bool,
     vault_kv_policy_name    = string,

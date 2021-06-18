@@ -44,11 +44,11 @@ data "template_file" "nomad_job_redash_server" {
     ldap_vault_kv_field_password = var.ldap_vault_secret.vault_kv_field_password
 
     # if creds for redash are provided by vault
-    redash_use_vault_provider      = var.redash_vault_secret.use_vault_provider
-    redash_vault_kv_policy_name    = var.redash_vault_secret.vault_kv_policy_name
-    redash_vault_kv_path           = var.redash_vault_secret.vault_kv_path
-    redash_vault_kv_field_username = var.redash_vault_secret.vault_kv_field_username
-    redash_vault_kv_field_password = var.redash_vault_secret.vault_kv_field_password
+    redash_admin_use_vault_provider      = var.redash_admin_vault_secret.use_vault_provider
+    redash_admin_vault_kv_policy_name    = var.redash_admin_vault_secret.vault_kv_policy_name
+    redash_admin_vault_kv_path           = var.redash_admin_vault_secret.vault_kv_path
+    redash_admin_vault_kv_field_username = var.redash_admin_vault_secret.vault_kv_field_username
+    redash_admin_vault_kv_field_password = var.redash_admin_vault_secret.vault_kv_field_password
 
     # Datasource upstreams
     upstreams = jsonencode(var.datasource_upstreams)

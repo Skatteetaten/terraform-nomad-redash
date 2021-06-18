@@ -44,7 +44,7 @@ module "redash" {
     vault_kv_field_username = "username"
     vault_kv_field_password = "password"
   }
-  redash_vault_secret = {
+  redash_admin_vault_secret = {
     use_vault_provider      = true
     vault_kv_policy_name    = "kv-secret"
     vault_kv_path           = "secret/dev/redash"
